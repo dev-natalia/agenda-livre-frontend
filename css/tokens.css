@@ -22,4 +22,15 @@
   --focus-offset: 2px;
 
   --content-max-width: 72rem;
+
+  /* Ponto de troca entre menu móvel e navegação em linha: 48rem (768px).
+     Precisa coincidir com a consulta de mídia de js/components/site-nav.js. */
+  --color-brand: #0b4f9c;
+  --color-brand-contrast: #ffffff;
+  --color-tag-background: #e6eefa;
+  --color-tag-text: #0b3a75;
+  --color-skeleton: #e4e4e4;
+  --color-empty-border: #595959;
+  --radius-card: 8px;
+  --card-media-ratio: 16 / 9;
 }

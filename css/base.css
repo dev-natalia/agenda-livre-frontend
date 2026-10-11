@@ -30,3 +30,34 @@ a {
   background: var(--color-notice-background);
   color: var(--color-notice-text);
 }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-brand);
+  color: var(--color-brand-contrast);
+  transform: translateY(-120%);
+  z-index: 10;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+main[tabindex="-1"]:focus {
+  outline: none;
+}

@@ -11,15 +11,31 @@
   <script type="module" src="js/pages/activity-details.js"></script>
 </head>
 <body>
-  <header>
-    <p>Agenda Livre</p>
+  <a class="skip-link" href="#main-content">Pular para o conteúdo principal</a>
+  <header class="site-header">
+    <a class="site-header__brand" href="index.html">Agenda Livre</a>
+    <button type="button" class="site-header__toggle" aria-expanded="false" aria-controls="site-nav-list" hidden>Menu</button>
+    <nav class="site-nav" aria-label="Navegação principal">
+      <ul id="site-nav-list">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="explorar.html">Explorar atividades</a></li>
+          <li><a href="sobre.html">Sobre</a></li>
+          <li><a href="contato.html">Contato</a></li>
+      </ul>
+    </nav>
   </header>
-  <main>
+  <main id="main-content" tabindex="-1">
     <h1>Detalhes da atividade</h1>
     <p>Os detalhes da atividade estarão disponíveis em breve.</p>
   </main>
-  <footer>
+  <footer class="site-footer">
     <p>Agenda Livre</p>
+    <nav aria-label="Rodapé">
+      <ul>
+        <li><a href="sobre.html">Sobre</a></li>
+        <li><a href="contato.html">Contato</a></li>
+      </ul>
+    </nav>
   </footer>
 </body>
 </html>

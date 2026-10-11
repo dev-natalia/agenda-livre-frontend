@@ -11,6 +11,23 @@ beforeEach(() => {
 });
 
 describe("renderErrorState", () => {
+  it("por padrão define a região de status no contêiner", () => {
+    container.removeAttribute("role");
+    container.removeAttribute("aria-live");
+    renderErrorState(container, new ApiError("network"));
+    expect(container.getAttribute("role")).toBe("status");
+    expect(container.getAttribute("aria-live")).toBe("polite");
+  });
+
+  it("com live: false não define role nem aria-live", () => {
+    container.removeAttribute("role");
+    container.removeAttribute("aria-live");
+    renderErrorState(container, new ApiError("network"), { onRetry: vi.fn(), live: false });
+    expect(container.hasAttribute("role")).toBe(false);
+    expect(container.hasAttribute("aria-live")).toBe(false);
+    expect(container.querySelector("button").textContent).toBe("Tentar novamente");
+  });
+
   it("mostra a mensagem via textContent, sem interpretar HTML", () => {
     const error = new ApiError("server", { userMessage: '<img src=x onerror="alert(1)">Indisponível' });
     renderErrorState(container, error);
