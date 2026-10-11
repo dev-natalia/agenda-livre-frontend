@@ -1,54 +1,219 @@
-.error-state__message {
-  margin: 0 0 var(--space-3);
-  padding: var(--space-3);
-  border: 2px solid var(--color-border);
-  border-left-width: 6px;
-  border-radius: 4px;
-  background: var(--color-notice-background);
-  color: var(--color-notice-text);
-}
-
+/* Botões (primário, secundário, contornado). O botão "Tentar novamente" da feature 003
+   usa o estilo primário por seletor, sem mudar o HTML gerado. */
+.button,
 .error-state__retry {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  min-width: var(--target-min);
   padding: var(--space-2) var(--space-4);
-  border: 2px solid var(--color-link);
-  border-radius: 4px;
-  background: var(--color-link);
-  color: var(--color-background);
+  border: var(--border-width-control) solid var(--color-action);
+  border-radius: var(--radius-sm);
+  background: var(--color-action);
+  color: var(--color-brand-contrast);
   font: inherit;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
+  transition:
+    background-color var(--motion-duration) var(--motion-ease),
+    border-color var(--motion-duration) var(--motion-ease),
+    color var(--motion-duration) var(--motion-ease);
 }
 
-.error-state__retry:focus-visible,
+.button:hover,
+.error-state__retry:hover {
+  border-color: var(--color-action-hover);
+  background: var(--color-action-hover);
+  color: var(--color-brand-contrast);
+  text-decoration: underline;
+}
+
+.button:active,
+.error-state__retry:active {
+  box-shadow: inset 0 0 0 2px var(--color-brand-contrast);
+}
+
+.button--secondary {
+  border-color: var(--color-accent-strong);
+  background: var(--color-accent);
+  color: var(--color-text);
+}
+
+.button--secondary:hover {
+  border-color: var(--color-accent-strong);
+  background: var(--color-accent-strong);
+  color: var(--color-brand-contrast);
+}
+
+.button--outline {
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+  color: var(--color-primary);
+}
+
+.button--outline:hover {
+  border-color: var(--color-primary);
+  background: var(--color-tag-background);
+  color: var(--color-primary);
+}
+
+.button:disabled,
+.error-state__retry:disabled {
+  border-style: dashed;
+  border-color: var(--color-text-muted);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  cursor: not-allowed;
+}
+
+.button[aria-pressed="true"],
+.button[aria-current="true"] {
+  border-width: 4px;
+  font-weight: 700;
+}
+
 [role="status"][tabindex="-1"]:focus-visible {
   outline: var(--focus-width) solid var(--focus-color);
   outline-offset: var(--focus-offset);
 }
 
-.error-state__retry:disabled {
+/* Mensagens: erro (borda esquerda grossa), carregando (pontilhada), vazio (tracejada). */
+.error-state__message {
+  margin: 0 0 var(--space-3);
+  padding: var(--space-3);
+  border: var(--border-width-control) solid var(--color-border);
+  border-left-width: 6px;
+  border-radius: var(--radius-sm);
+  background: var(--color-notice-background);
+  color: var(--color-notice-text);
+}
+
+.region-state__loading,
+.region-state__empty {
+  margin: 0 0 var(--space-3);
+  padding: var(--space-3);
+  border: var(--border-width-control) solid var(--color-empty-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.region-state__loading {
+  border-style: dotted;
+}
+
+.region-state__empty {
   border-style: dashed;
+}
+
+.region-state__title {
+  display: block;
+  font-weight: 700;
+}
+
+.region-state__hint {
+  display: block;
+  margin-top: var(--space-1);
+}
+
+/* Esqueletos são estáticos. Se um dia animarem, a regra central de base.css os desliga. */
+.skeleton-card {
+  aspect-ratio: 4 / 3;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-skeleton);
+}
+
+/* Campos de formulário: rótulo acima, borda visível, erro com borda tracejada e texto. */
+label {
+  display: block;
+  margin-bottom: var(--space-1);
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  display: block;
+  width: 100%;
+  min-height: var(--target-min);
+  padding: var(--space-2) var(--space-2-5);
+  border: var(--border-width-control) solid var(--color-border);
+  border-radius: var(--radius-sm);
   background: var(--color-surface);
   color: var(--color-text);
+  font: inherit;
+  transition: border-color var(--motion-duration) var(--motion-ease);
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--color-primary);
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  border-style: dashed;
+  color: var(--color-text-muted);
   cursor: not-allowed;
 }
 
-/* Grade de cards: 1 coluna em tela estreita, 2 a partir de 40rem, 3 a partir de 64rem. */
+[aria-invalid="true"] {
+  border-style: dashed;
+  border-color: var(--color-accent-strong);
+}
+
+.field-error {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text);
+  font-size: var(--font-size-small);
+  font-weight: 600;
+}
+
+.field-error::before {
+  content: "Erro: ";
+}
+
+/* Grade de cards: 1 coluna em tela estreita, 2 a partir de 40rem, 3 a partir de 64rem.
+   Sem suporte a grid, os cards ficam empilhados em uma coluna simples. */
 .card-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-4);
+  display: block;
   margin: 0;
   padding: 0;
 }
 
+.card-grid > * + * {
+  margin-top: var(--space-4);
+}
+
+@supports (display: grid) {
+  .card-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: stretch;
+  }
+
+  .card-grid > * + * {
+    margin-top: 0;
+  }
+}
+
 @media (min-width: 40rem) {
   .card-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 64rem) {
   .card-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -58,9 +223,15 @@
   flex-direction: column;
   min-width: 0;
   overflow: hidden;
-  border: 1px solid var(--color-border);
+  border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-card);
-  background: var(--color-background);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--motion-duration) var(--motion-ease);
+}
+
+.activity-card:hover {
+  border-color: var(--color-primary);
 }
 
 .activity-card:focus-within {
@@ -97,21 +268,23 @@
   overflow-wrap: anywhere;
 }
 
+/* Etiqueta: tratamento neutro padrão; o nome da categoria é sempre escrito. */
 .activity-card__category {
   align-self: flex-start;
   margin: 0;
   padding: var(--space-1) var(--space-2);
-  border-radius: 4px;
+  border: var(--border-width) solid var(--color-tag-text);
+  border-radius: var(--radius-sm);
   background: var(--color-tag-background);
   color: var(--color-tag-text);
-  font-size: 0.875rem;
+  font-size: var(--font-size-small);
   font-weight: 700;
 }
 
 .activity-card__title {
   margin: 0;
-  font-size: 1.125rem;
-  line-height: 1.3;
+  font-size: var(--font-size-card-title);
+  line-height: var(--line-height-heading);
 }
 
 /* Link esticado: o card inteiro é clicável, com uma única parada de foco. */
@@ -123,51 +296,11 @@
 
 .activity-card__title a:focus-visible {
   outline: none;
+  box-shadow: none;
 }
 
 .activity-card__unit,
 .activity-card__when {
   margin: 0;
-  font-size: 0.9375rem;
-}
-
-/* Estados de região (carregando, vazio). O erro usa .error-state__message. */
-.region-state__loading,
-.region-state__empty {
-  margin: 0 0 var(--space-3);
-  padding: var(--space-3);
-  border: 2px solid var(--color-empty-border);
-  border-radius: 4px;
-}
-
-.region-state__loading {
-  border-style: dotted;
-}
-
-.region-state__empty {
-  border-style: dashed;
-}
-
-.region-state__title {
-  display: block;
-  font-weight: 700;
-}
-
-.region-state__hint {
-  display: block;
-  margin-top: var(--space-1);
-}
-
-.skeleton-card {
-  aspect-ratio: 4 / 3;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
-  background: var(--color-skeleton);
-}
-
-/* Esqueletos são estáticos: nada a reduzir. Se um dia animarem, desligar aqui. */
-@media (prefers-reduced-motion: reduce) {
-  .skeleton-card {
-    animation: none;
-  }
+  font-size: var(--font-size-small);
 }

@@ -1,36 +1,75 @@
+/* Fonte única dos valores visuais (ver specs/004-visual-identity-responsive/contracts/design-tokens.md).
+   Os demais arquivos CSS só usam var(--nome); cores, fontes e durações literais ficam aqui.
+
+   Pontos de quebra (@media não aceita variáveis; usar só estes valores, em rem):
+     40rem  cards em 2 colunas
+     48rem  navegação em linha (igual a NARROW_QUERY em js/components/site-nav.js: max-width 47.99rem)
+     64rem  cards em 3+ colunas */
 :root {
-  --color-text: #1a1a1a;
-  --color-background: #ffffff;
-  --color-surface: #f4f4f4;
-  --color-border: #767676;
-  --color-link: #0b4f9c;
+  /* Cor — paleta do DOC-10 com ajustes de contraste (razões no contrato). */
+  --color-primary: #1e40af;
+  --color-brand: #1e40af;
+  --color-link: #1e40af;
+  --color-action: #2563eb;
+  --color-action-hover: #1d4ed8;
+  --color-accent: #f97316;
+  --color-accent-strong: #c2410c;
+  --color-highlight: #facc15;
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+  --color-text: #1f2937;
+  --color-text-muted: #475569;
+  --color-border: #64748b;
+  --color-brand-contrast: #ffffff;
+  --color-tag-background: #e6eefa;
+  --color-tag-text: #1e3a8a;
   --color-notice-background: #fff4ce;
-  --color-notice-text: #3d2e00;
+  --color-notice-text: #1f2937;
+  --color-skeleton: #e2e8f0;
+  --color-empty-border: #475569;
 
-  --font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  /* Tipografia */
+  --font-heading: Poppins, "Poppins Fallback", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-body: Inter, "Inter Fallback", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-family: var(--font-body);
   --font-size-base: 1rem;
+  --font-size-small: 0.875rem;
+  --font-size-h1: clamp(2rem, 1.6rem + 2vw, 2.5rem);
+  --font-size-h2: clamp(1.5rem, 1.35rem + 0.75vw, 1.75rem);
+  --font-size-card-title: 1.125rem;
   --line-height-base: 1.6;
+  --line-height-heading: 1.25;
 
+  /* Espaçamento (múltiplos de 4 px) */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
+  --space-2-5: 0.75rem;
   --space-3: 1rem;
   --space-4: 1.5rem;
   --space-5: 2rem;
+  --space-6: 3rem;
+  --space-7: 4rem;
 
-  --focus-color: #0b4f9c;
+  /* Forma */
+  --radius-sm: 4px;
+  --radius-card: 8px;
+  --border-width: 1px;
+  --border-width-control: 2px;
+  --shadow-card: 0 1px 3px rgb(31 41 55 / 0.12);
+  --card-media-ratio: 16 / 9;
+
+  /* Foco */
+  --focus-color: #1e40af;
   --focus-width: 3px;
   --focus-offset: 2px;
+  --shadow-focus-halo: 0 0 0 5px #ffffff;
 
+  /* Movimento (zerado pela regra central em base.css sob prefers-reduced-motion) */
+  --motion-duration: 150ms;
+  --motion-ease: ease-out;
+
+  /* Alvos de toque e largura */
+  --target-min: 2.75rem;
   --content-max-width: 72rem;
-
-  /* Ponto de troca entre menu móvel e navegação em linha: 48rem (768px).
-     Precisa coincidir com a consulta de mídia de js/components/site-nav.js. */
-  --color-brand: #0b4f9c;
-  --color-brand-contrast: #ffffff;
-  --color-tag-background: #e6eefa;
-  --color-tag-text: #0b3a75;
-  --color-skeleton: #e4e4e4;
-  --color-empty-border: #595959;
-  --radius-card: 8px;
-  --card-media-ratio: 16 / 9;
+  --reading-max-width: 65ch;
 }

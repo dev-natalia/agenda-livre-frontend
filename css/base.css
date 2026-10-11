@@ -1,3 +1,47 @@
+/* Fontes hospedadas localmente (fonts/); swap mantém o texto visível durante o carregamento. */
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/poppins-latin-600-normal.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/poppins-latin-700-normal.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Fontes de reserva com métricas próximas às finais, para reduzir o deslocamento na troca. */
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial");
+  size-adjust: 107%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Poppins Fallback";
+  src: local("Arial");
+  size-adjust: 112%;
+  ascent-override: 93%;
+  descent-override: 31%;
+  line-gap-override: 8%;
+}
+
 *,
 *::before,
 *::after {
@@ -5,28 +49,74 @@
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
-  font-family: var(--font-family);
+  font-family: var(--font-body);
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   color: var(--color-text);
   background: var(--color-background);
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: var(--line-height-heading);
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: 700;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+}
+
+small {
+  font-size: var(--font-size-small);
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Links em texto corrido: sublinhado como pista além da cor. */
 a {
   color: var(--color-link);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  transition: color var(--motion-duration) var(--motion-ease);
+}
+
+a:hover {
+  color: var(--color-action-hover);
+  text-decoration-thickness: 3px;
 }
 
 :focus-visible {
   outline: var(--focus-width) solid var(--focus-color);
   outline-offset: var(--focus-offset);
+  box-shadow: var(--shadow-focus-halo);
 }
 
 .config-notice {
   margin: 0 0 var(--space-4);
   padding: var(--space-3);
-  border: 2px solid var(--color-border);
-  border-radius: 4px;
+  border: var(--border-width-control) solid var(--color-border);
+  border-radius: var(--radius-sm);
   background: var(--color-notice-background);
   color: var(--color-notice-text);
 }
@@ -48,7 +138,7 @@ a {
   top: 0;
   left: 0;
   padding: var(--space-2) var(--space-3);
-  background: var(--color-brand);
+  background: var(--color-primary);
   color: var(--color-brand-contrast);
   transform: translateY(-120%);
   z-index: 10;
@@ -60,4 +150,42 @@ a {
 
 main[tabindex="-1"]:focus {
   outline: none;
+  box-shadow: none;
+}
+
+/* Movimento: rolagem suave só para quem não pediu redução. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Regra central de movimento reduzido (contracts/motion.md): vale para qualquer
+   transição ou animação atual ou futura, sem configuração por componente. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration: 0s;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  body {
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  .skip-link,
+  .site-header__toggle,
+  .site-nav {
+    display: none;
+  }
 }
