@@ -3,7 +3,11 @@
 // Para outro ambiente, altere apenas apiBaseUrl (incluindo o prefixo /api/v1).
 export const PUBLIC_CONFIG = {
   apiBaseUrl: "http://localhost:8000/api/v1",
+  // Tempo limite (ms) de cada consulta à API; ajustável por ambiente.
+  requestTimeoutMs: 15000,
 };
+
+const DEFAULT_TIMEOUT_MS = 15000;
 
 const LOCAL_HOSTNAMES = ["localhost", "127.0.0.1", "[::1]"];
 
@@ -53,4 +57,9 @@ export function getApiBaseUrl(state = getConfigStatus()) {
     throw new Error(state.message);
   }
   return state.apiBaseUrl;
+}
+
+export function getRequestTimeoutMs() {
+  const value = PUBLIC_CONFIG.requestTimeoutMs;
+  return Number.isFinite(value) && value > 0 ? value : DEFAULT_TIMEOUT_MS;
 }

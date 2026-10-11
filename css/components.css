@@ -1,0 +1,32 @@
+.error-state__message {
+  margin: 0 0 var(--space-3);
+  padding: var(--space-3);
+  border: 2px solid var(--color-border);
+  border-left-width: 6px;
+  border-radius: 4px;
+  background: var(--color-notice-background);
+  color: var(--color-notice-text);
+}
+
+.error-state__retry {
+  padding: var(--space-2) var(--space-4);
+  border: 2px solid var(--color-link);
+  border-radius: 4px;
+  background: var(--color-link);
+  color: var(--color-background);
+  font: inherit;
+  cursor: pointer;
+}
+
+.error-state__retry:focus-visible,
+[role="status"][tabindex="-1"]:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+.error-state__retry:disabled {
+  border-style: dashed;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: not-allowed;
+}

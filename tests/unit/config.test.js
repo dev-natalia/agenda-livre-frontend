@@ -73,3 +73,10 @@ describe("getApiBaseUrl", () => {
     expect(getApiBaseUrl(state)).toBe("https://api.exemplo.org/api/v1");
   });
 });
+
+describe("getRequestTimeoutMs", () => {
+  it("devolve o tempo limite público padrão de 15 segundos", async () => {
+    const { getRequestTimeoutMs } = await import("../../js/config.js");
+    expect(getRequestTimeoutMs()).toBe(15000);
+  });
+});
