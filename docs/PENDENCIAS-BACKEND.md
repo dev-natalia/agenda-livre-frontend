@@ -24,3 +24,5 @@ Nenhuma até o momento.
 ## Verificado e conforme o contrato
 
 `200` com lista vazia (`count: 0`), `400` com `errors` por campo (`date_from` inválido), `404` para detalhe inexistente, id malformado e rota inexistente sob `/api/`, `405` para `POST`, envelope paginado `{count, next, previous, results}`, CORS para `http://localhost:5500`. O `429` não foi exercitado.
+
+Feature 005 (código do backend, sem executar a API): `date_from` sozinho descarta atividades sem ocorrência na janela (`build_listing`), então `GET /activities/?date_from=<hoje>&page_size=3` devolve só atividades com ocorrência futura, como a página inicial espera. Confirmar com a API em execução.
