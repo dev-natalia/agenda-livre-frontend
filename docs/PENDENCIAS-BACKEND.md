@@ -12,6 +12,11 @@ Divergências entre o contrato documentado no backend (`agenda-livre-backend/spe
   - Observado: `GET /activities/?page=999`, `?page=2` (com `count: 1`) e `?page=0` respondem `400` com `{"detail":"Parâmetros inválidos.","errors":{"page":["Informe uma página válida."]}}`.
   - Impacto no frontend: o cliente classifica como `bad_request` (sem "Tentar novamente"), e não como `not_found`. A paginação (FE-024) precisa tratar esse caso, por exemplo voltando à página 1. Se o `400` for o comportamento desejado, basta atualizar o contrato; se o `404` ou o fallback para a página padrão for o desejado, corrigir o backend.
 
+- [ ] **Atividades não têm imagem no backend.**
+  - Contrato: nenhum campo de imagem em `GET /activities/` nem em `GET /activities/{id}/`. O backend exclui imagens de propósito (`agenda-livre-backend/specs/004-activity-management/spec.md`: "imagens não fazem parte desta versão"), mas o DOC-12/DOC-13 do frontend preveem imagem no card e na página de detalhes.
+  - Impacto no frontend: todo card e a página de detalhes usam o fallback visual (FE-009) como caso normal. O componente do card fica preparado para receber uma imagem, mas nada a exibe hoje (feature 003).
+  - Decisão pendente: (a) o backend passa a oferecer imagem (campo de URL, mais texto alternativo ou marcação de imagem decorativa, nos dois endpoints); ou (b) o produto aceita a versão 1 sem imagens, e os DOC-12/DOC-13 passam a tratar o fallback como padrão.
+
 ## Resolvidas
 
 Nenhuma até o momento.

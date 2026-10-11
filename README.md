@@ -34,7 +34,7 @@ css/
   tokens.css        variáveis visuais (cores, fonte, espaçamentos, foco)
   base.css          estilos globais, foco visível e aviso de configuração
   layout.css        largura e espaçamento de header, main e footer
-  components.css    estilos de componentes compartilhados (erro com nova tentativa)
+  components.css    estilos de componentes compartilhados (erro, cards, estados de região)
 js/
   config.js         ÚNICO ponto da URL base da API, do tempo limite e sua validação
   api/
@@ -43,6 +43,11 @@ js/
   components/
     config-notice.js  aviso de configuração ausente ou inválida
     error-state.js    erro acessível com "Tentar novamente"
+    site-nav.js       menu móvel (botão de divulgação) do cabeçalho
+    activity-card.js  card de atividade com fallback de imagem
+    region-state.js   estados de uma região: carregando, erro, vazio, sucesso
+  utils/
+    format.js         data/horário em pt-BR e endereço de detalhes
   pages/            um módulo por página (inicialização e comportamento)
 tests/unit/         testes unitários (Vitest)
 tests/e2e/          testes de navegador (Playwright)
@@ -50,7 +55,7 @@ specs/              especificações e planos das features (Spec Kit)
 docs/               documentação de produto e design do frontend
 ```
 
-Diferenças em relação à proposta do DOC-09: o repositório é o próprio frontend (não há pasta `frontend/`), e `assets/`, `css/pages.css` e `js/utils/` ainda não existem. Eles são criados somente quando uma feature precisar deles, para não manter arquivos vazios.
+Diferenças em relação à proposta do DOC-09: o repositório é o próprio frontend (não há pasta `frontend/`), e `assets/` e `css/pages.css` ainda não existem. Eles são criados somente quando uma feature precisar deles, para não manter arquivos vazios.
 
 ## Configuração da API
 
@@ -94,6 +99,48 @@ async function load() {
 
 **CORS:** a origem do frontend (por exemplo `http://localhost:5500`) precisa constar em `CORS_ALLOWED_ORIGINS` no backend.
 
+## Estrutura compartilhada das páginas
+
+Todas as páginas repetem o mesmo bloco de HTML: link "Pular para o conteúdo principal", `header.site-header` (marca, botão "Menu" e `nav` principal), `main#main-content` e `footer.site-footer`. A repetição é proposital: a navegação precisa funcionar sem JavaScript. Para mudar um link ou rótulo, edite as cinco páginas; `tests/unit/site-shell.test.js` falha se o cabeçalho ou o rodapé divergirem entre elas.
+
+- `aria-current="page"` fica no link da própria página (Início, Explorar, Sobre, Contato). A página de detalhes não marca nenhum.
+- O botão "Menu" nasce com `hidden`; `initSiteNav()` (chamado por todo `js/pages/*.js`) o revela só em tela estreita (< 48 rem, igual ao `@media` de `css/layout.css`). Sem JavaScript, os links ficam sempre visíveis.
+
+## Componentes compartilhados
+
+Os componentes não consultam a API: recebem dados e ações da página.
+
+```js
+import { createActivityCard } from "../components/activity-card.js";
+import { createRegionState } from "../components/region-state.js";
+
+// HTML da página, presente desde o carregamento:
+//   <p id="status" class="visually-hidden" role="status" aria-live="polite"></p>
+//   <div id="content"></div>
+const region = createRegionState({
+  content: document.getElementById("content"),
+  status: document.getElementById("status"),
+});
+
+async function load() {
+  region.showLoading({ announce: "Carregando atividades…" });   // 3 esqueletos
+  try {
+    const data = await scope.run("/activities/");
+    if (data.count === 0) return region.showEmpty({ hint: "Altere ou limpe os filtros." });
+    const grid = document.createElement("div");
+    grid.className = "card-grid";
+    grid.append(...data.results.map((a) => createActivityCard(a, { headingLevel: 2 })));
+    region.showSuccess(grid, { announce: `${data.count} atividades encontradas.` });
+  } catch (error) {
+    region.showError(error, { onRetry: load });   // ignora consulta cancelada
+  }
+}
+```
+
+- `createActivityCard(activity, { headingLevel, categoryIcons })` devolve um `<article>` com um único link para `atividade.html?id=<id>`, ou `null` sem `id`/`title`. A API não envia imagem, então a área de imagem mostra o fallback decorativo; se `activity.image = { url, alt }` existir, a imagem é usada (e volta ao fallback se falhar).
+- `createRegionState` mantém `content` fora de qualquer região `live` e anuncia uma mensagem por troca em `status`. O anúncio de "carregando" só sai após 300 ms. Nenhuma troca move o foco.
+- `renderErrorState(container, error, { onRetry, live })`: com `live: false` o contêiner não vira região de status (é o que `createRegionState` usa).
+
 ## Testes
 
 ```sh
@@ -103,7 +150,7 @@ npm test
 
 Os testes unitários usam Vitest e ficam em `tests/unit/`.
 
-Os testes de navegador usam Playwright (`tests/e2e/`) e sobem o servidor local sozinhos. Na primeira vez: `npx playwright install chromium`. Depois: `npm run test:e2e`.
+Os testes de navegador usam Playwright (`tests/e2e/`) e sobem o servidor local sozinhos. Na primeira vez: `npx playwright install chromium`. Depois: `npm run test:e2e`. A suíte usa 2 workers de propósito: o servidor estático de teste recusa conexões com mais paralelismo. `tests/e2e/accessibility.spec.js` roda axe-core nas cinco páginas e nos estados dos componentes; ele não substitui a revisão manual com teclado e leitor de tela.
 
 ## Como adicionar...
 

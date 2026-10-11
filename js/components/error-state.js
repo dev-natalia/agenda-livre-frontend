@@ -5,12 +5,15 @@ export function clearErrorState(container) {
 }
 
 // O contêiner deve existir no DOM antes do erro, para que a mudança seja anunciada.
-export function renderErrorState(container, error, { onRetry } = {}) {
+export function renderErrorState(container, error, { onRetry, live = true } = {}) {
   clearErrorState(container);
   if (isCancelled(error)) return;
 
-  container.setAttribute("role", "status");
-  container.setAttribute("aria-live", "polite");
+  // Com live: false, o anúncio fica a cargo de uma região de status externa.
+  if (live) {
+    container.setAttribute("role", "status");
+    container.setAttribute("aria-live", "polite");
+  }
 
   const message = document.createElement("p");
   message.className = "error-state__message";
