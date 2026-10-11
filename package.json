@@ -1,0 +1,17 @@
+{
+  "name": "agenda-livre-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Frontend público do Agenda Livre (HTML, CSS e JavaScript puro).",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "jsdom": "^25.0.1",
+    "vitest": "^2.1.8"
+  }
+}

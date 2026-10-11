@@ -1,0 +1,32 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+  background: var(--color-background);
+}
+
+a {
+  color: var(--color-link);
+}
+
+:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+.config-notice {
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3);
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-notice-background);
+  color: var(--color-notice-text);
+}
