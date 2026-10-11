@@ -306,7 +306,8 @@ textarea:disabled {
 }
 
 /* Pesquisa rápida: aviso de opções indisponíveis (visível só quando há texto). */
-.quick-search__notice {
+.quick-search__notice,
+.explore-filters__notice {
   padding: var(--space-2) var(--space-2-5);
   border-left: var(--focus-width) solid var(--color-accent-strong);
   background: var(--color-notice-background);
@@ -314,7 +315,8 @@ textarea:disabled {
   font-size: var(--font-size-small);
 }
 
-.quick-search__notice:empty {
+.quick-search__notice:empty,
+.explore-filters__notice:empty {
   display: none;
 }
 
@@ -324,5 +326,71 @@ textarea:disabled {
 }
 
 .upcoming .card-grid > .error-state__retry {
+  justify-self: start;
+}
+
+/* Paginação: links reais; página atual e indisponíveis se distinguem por forma e texto, não só por cor. */
+.pagination {
+  margin-top: var(--space-5);
+}
+
+.pagination__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pagination__link,
+.pagination__gap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  padding: var(--space-1) var(--space-2-5);
+  border: var(--border-width-control) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-link);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pagination__gap {
+  min-width: auto;
+  border-color: transparent;
+  background: transparent;
+  color: var(--color-text-muted);
+}
+
+a.pagination__link:hover {
+  border-color: var(--color-action-hover);
+  background: var(--color-tag-background);
+}
+
+.pagination__link--current {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-brand-contrast);
+  text-decoration: underline;
+}
+
+.pagination__link--disabled {
+  border-style: dashed;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+/* Mensagens de vazio e erro ocupam a linha inteira da grade de resultados. */
+.results .card-grid > :not(.skeleton-card):not(.activity-card) {
+  grid-column: 1 / -1;
+}
+
+.results .card-grid > .error-state__retry {
   justify-self: start;
 }
