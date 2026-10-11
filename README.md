@@ -30,9 +30,10 @@ Cada página abre diretamente pela própria URL. Os links usam caminhos relativo
 
 ```text
 index.html, explorar.html, atividade.html, sobre.html, contato.html
+fonts/              Inter e Poppins (.woff2, hospedadas localmente)
 css/
-  tokens.css        variáveis visuais (cores, fonte, espaçamentos, foco)
-  base.css          estilos globais, foco visível e aviso de configuração
+  tokens.css        única fonte dos valores visuais (cores, fontes, espaçamentos, foco, movimento)
+  base.css          fontes (@font-face), tipografia, links, foco visível, regra central de movimento reduzido
   layout.css        largura e espaçamento de header, main e footer
   components.css    estilos de componentes compartilhados (erro, cards, estados de região)
 js/
@@ -56,6 +57,15 @@ docs/               documentação de produto e design do frontend
 ```
 
 Diferenças em relação à proposta do DOC-09: o repositório é o próprio frontend (não há pasta `frontend/`), e `assets/` e `css/pages.css` ainda não existem. Eles são criados somente quando uma feature precisar deles, para não manter arquivos vazios.
+
+## Identidade visual e responsividade
+
+- **Tokens:** cores, fontes, espaçamentos, raios, sombras, foco e duração de transição só existem em `css/tokens.css`; os demais CSS usam `var(--nome)`. Um teste (`tests/unit/design-tokens.test.js`) falha se aparecer cor, fonte ou duração literal fora dele.
+- **Contraste:** os pares texto/fundo estão no teste e em `specs/004-visual-identity-responsive/contracts/design-tokens.md`, com os ajustes em relação ao DOC-10 (texto escuro sobre o laranja, `#C2410C` quando o laranja for linha ou texto, amarelo só decorativo).
+- **Pontos de quebra:** `40rem` (cards em 2 colunas), `48rem` (navegação em linha, igual a `site-nav.js`) e `64rem` (3 colunas). `@media` não aceita variáveis; o teste rejeita outros valores.
+- **Botões:** `.button--primary`, `.button--secondary` e `.button--outline`; o "Tentar novamente" usa o primário por seletor.
+- **Movimento:** transições usam `var(--motion-duration)`; `base.css` zera a duração e desliga a rolagem suave sob `prefers-reduced-motion: reduce`. Não declare duração literal em componentes.
+- **Fontes:** ver `fonts/README.md`.
 
 ## Configuração da API
 

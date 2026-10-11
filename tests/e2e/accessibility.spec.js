@@ -36,6 +36,8 @@ for (const path of pages) {
     await page.goto(`/${path}`);
     expect(await scan(page)).toEqual([]);
     await page.getByRole("button", { name: "Menu" }).click();
+    // Aguarda o fim da transição de cor (150 ms): o axe lê cores intermediárias.
+    await page.waitForTimeout(300);
     expect(await scan(page)).toEqual([]);
   });
 }

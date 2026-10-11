@@ -1,3 +1,5 @@
+/* Mobile-first: o estilo base vale de 320px para cima; @media (min-width) só acrescenta.
+   Pontos de quebra permitidos: 40rem, 48rem, 64rem (ver tokens.css). */
 body > header,
 body > main,
 body > footer {
@@ -8,11 +10,22 @@ body > footer {
 }
 
 body > main {
+  flex: 1 0 auto;
   padding-block: var(--space-5);
 }
 
+body > main p {
+  max-width: var(--reading-max-width);
+}
+
 body > footer {
-  border-top: 1px solid var(--color-border);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+/* Conteúdo que exige layout bidimensional rola no próprio contêiner, nunca a página. */
+.scroll-x {
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .site-header {
@@ -21,13 +34,18 @@ body > footer {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2) var(--space-4);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: var(--border-width) solid var(--color-border);
+  background: var(--color-surface);
 }
 
 .site-header__brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  font-family: var(--font-heading);
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--color-brand);
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -47,7 +65,9 @@ body > footer {
 
 .site-nav a,
 .site-footer a {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
   padding-block: var(--space-2);
 }
 
@@ -77,14 +97,19 @@ body > footer {
 
 /* Botão do menu: só aparece quando site-nav.js o revela (hidden removido) em tela estreita. */
 .site-header__toggle {
+  min-height: var(--target-min);
+  min-width: var(--target-min);
   padding: var(--space-2) var(--space-3);
-  border: 2px solid var(--color-brand);
-  border-radius: 4px;
-  background: var(--color-background);
-  color: var(--color-brand);
+  border: var(--border-width-control) solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-primary);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+  transition:
+    background-color var(--motion-duration) var(--motion-ease),
+    color var(--motion-duration) var(--motion-ease);
 }
 
 .site-header__toggle[hidden] {
@@ -92,7 +117,7 @@ body > footer {
 }
 
 .site-header__toggle[aria-expanded="true"] {
-  background: var(--color-brand);
+  background: var(--color-primary);
   color: var(--color-brand-contrast);
 }
 
