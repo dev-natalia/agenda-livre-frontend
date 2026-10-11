@@ -23,6 +23,19 @@ export const CATEGORIES = [
   { id: "44444444-4444-4444-8444-444444444444", name: "Esportes", slug: "esportes" },
 ];
 
+// Resposta paginada de `total` atividades, no recorte da página pedida (padrão da API: 12 por página).
+export function makeListing(total, { page = 1, pageSize = 12, base = "http://localhost:8000/api/v1/activities/" } = {}) {
+  const start = (page - 1) * pageSize;
+  const results = [];
+  for (let n = start + 1; n <= Math.min(total, start + pageSize); n += 1) results.push(makeActivity(n));
+  return {
+    count: total,
+    next: start + pageSize < total ? `${base}?page=${page + 1}` : null,
+    previous: page > 1 && results.length ? `${base}?page=${page - 1}` : null,
+    results,
+  };
+}
+
 const envelope = (results) => JSON.stringify({ count: results.length, next: null, previous: null, results });
 
 // Aponta o frontend para a API simulada (mesmo padrão de api-error-retry.spec.js).
@@ -52,10 +65,26 @@ export async function mockApi(
     failActivities = null,
     failUnits = null,
     failCategories = null,
+    activitiesResponder = null,
   } = {},
 ) {
   const requests = [];
   const state = { failActivities, failUnits, failCategories };
+
+  // `activitiesResponder(url)` devolve { status = 200, body, delayMs } e substitui a lista fixa.
+  async function handleActivities(route) {
+    const url = new URL(route.request().url());
+    requests.push({ path: url.pathname, search: url.search });
+    const answer = (await activitiesResponder(url)) ?? {};
+    if (answer.delayMs) await new Promise((resolve) => setTimeout(resolve, answer.delayMs));
+    if (answer.network) return route.abort("connectionrefused");
+    return route.fulfill({
+      status: answer.status ?? 200,
+      headers: CORS,
+      contentType: "application/json",
+      body: JSON.stringify(answer.body ?? {}),
+    });
+  }
 
   async function handle(route, key, results) {
     const url = new URL(route.request().url());
@@ -70,7 +99,9 @@ export async function mockApi(
   }
 
   await overrideConfig(page);
-  await page.route(`${API}/activities/**`, (route) => handle(route, "failActivities", activities));
+  await page.route(`${API}/activities/**`, (route) =>
+    activitiesResponder ? handleActivities(route) : handle(route, "failActivities", activities),
+  );
   await page.route(`${API}/units/**`, (route) => handle(route, "failUnits", units));
   await page.route(`${API}/categories/**`, (route) => handle(route, "failCategories", categories));
 

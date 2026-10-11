@@ -7,7 +7,7 @@ export default defineConfig({
   workers: 2,
   use: { baseURL: "http://localhost:5500" },
   webServer: {
-    command: "python -m http.server 5500",
+    command: "python tests/static-server.py 5500",
     url: "http://localhost:5500/index.html",
     reuseExistingServer: true,
   },
