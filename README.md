@@ -24,6 +24,8 @@ Depois abra `http://localhost:5500/`.
 | `sobre.html` | Sobre | `js/pages/about.js` |
 | `contato.html` | Contato | `js/pages/contact.js` |
 
+A página Explorar guarda termo, filtros e página no endereço (`q`, `unit`, `category`, `date`, `date_from`, `date_to`, `page`; contrato em `specs/006-activity-exploration/contracts/explore-url.md`), usa o histórico nativo do navegador e guarda por 5 minutos uma cópia dos resultados em `sessionStorage` para a volta dos detalhes.
+
 Cada página abre diretamente pela própria URL. Os links usam caminhos relativos para funcionar também em subcaminhos.
 
 ## Organização dos arquivos
@@ -160,7 +162,7 @@ npm test
 
 Os testes unitários usam Vitest e ficam em `tests/unit/`.
 
-Os testes de navegador usam Playwright (`tests/e2e/`) e sobem o servidor local sozinhos. Na primeira vez: `npx playwright install chromium`. Depois: `npm run test:e2e`. A suíte usa 2 workers de propósito: o servidor estático de teste recusa conexões com mais paralelismo. `tests/e2e/accessibility.spec.js` roda axe-core nas cinco páginas e nos estados dos componentes; ele não substitui a revisão manual com teclado e leitor de tela.
+Os testes de navegador usam Playwright (`tests/e2e/`) e sobem o servidor local sozinhos. Na primeira vez: `npx playwright install chromium`. Depois: `npm run test:e2e`. A suíte usa 2 workers de propósito e sobe `tests/static-server.py` (um `http.server` com fila de conexões maior, que evita `ERR_CONNECTION_REFUSED` intermitente). Se já houver um servidor na porta 5500 (por exemplo, `python -m http.server 5500`), o Playwright o reaproveita e a recusa de conexões pode voltar: encerre-o antes de rodar os testes. `tests/e2e/accessibility.spec.js` roda axe-core nas cinco páginas e nos estados dos componentes; ele não substitui a revisão manual com teclado e leitor de tela.
 
 ## Como adicionar...
 

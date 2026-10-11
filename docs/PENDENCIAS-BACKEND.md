@@ -10,7 +10,8 @@ Divergências entre o contrato documentado no backend (`agenda-livre-backend/spe
 - [ ] **Página fora do intervalo responde `400`, não `404`.**
   - Contrato: "Página fora do intervalo: `404` com o erro padrão" e "`page` inválido ou < 1 usa o padrão".
   - Observado: `GET /activities/?page=999`, `?page=2` (com `count: 1`) e `?page=0` respondem `400` com `{"detail":"Parâmetros inválidos.","errors":{"page":["Informe uma página válida."]}}`.
-  - Impacto no frontend: o cliente classifica como `bad_request` (sem "Tentar novamente"), e não como `not_found`. A paginação (FE-024) precisa tratar esse caso, por exemplo voltando à página 1. Se o `400` for o comportamento desejado, basta atualizar o contrato; se o `404` ou o fallback para a página padrão for o desejado, corrigir o backend.
+  - Impacto no frontend: o cliente classifica como `bad_request` (sem "Tentar novamente"), e não como `not_found`. A paginação (FE-024) precisa tratar esse caso, por exemplo voltando à página 1.
+  - Tratado na Explorar (feature 006): `400` com erro em `page`, ou `404`, em página maior que 1 volta à página 1 dos mesmos critérios. Funciona qualquer que seja a decisão do backend. Se o `400` for o comportamento desejado, basta atualizar o contrato; se o `404` ou o fallback para a página padrão for o desejado, corrigir o backend.
 
 - [ ] **Atividades não têm imagem no backend.**
   - Contrato: nenhum campo de imagem em `GET /activities/` nem em `GET /activities/{id}/`. O backend exclui imagens de propósito (`agenda-livre-backend/specs/004-activity-management/spec.md`: "imagens não fazem parte desta versão"), mas o DOC-12/DOC-13 do frontend preveem imagem no card e na página de detalhes.
@@ -26,3 +27,5 @@ Nenhuma até o momento.
 `200` com lista vazia (`count: 0`), `400` com `errors` por campo (`date_from` inválido), `404` para detalhe inexistente, id malformado e rota inexistente sob `/api/`, `405` para `POST`, envelope paginado `{count, next, previous, results}`, CORS para `http://localhost:5500`. O `429` não foi exercitado.
 
 Feature 005 (código do backend, sem executar a API): `date_from` sozinho descarta atividades sem ocorrência na janela (`build_listing`), então `GET /activities/?date_from=<hoje>&page_size=3` devolve só atividades com ocorrência futura, como a página inicial espera. Confirmar com a API em execução.
+
+Feature 006 (API em execução em `http://localhost:8000`, 2026-10-11): `?page=999`, `?page=2` (com `count: 1`) e `?page=0` respondem `400` com `errors.page`; `date` junto de `date_from` responde `400` (a Explorar nunca envia essa combinação); `unit` com UUID inexistente responde `200` com lista vazia; `q` com `date_from`/`date_to` responde `200` no envelope paginado.
