@@ -231,3 +231,56 @@ body > footer {
     justify-self: stretch;
   }
 }
+
+/* Página Explorar: barra de filtros e resumo dos resultados. */
+.explore-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: end;
+  margin-bottom: var(--space-5);
+}
+
+.explore-filters__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2-5);
+}
+
+.explore-filters__notice {
+  margin: 0;
+}
+
+.results h2 {
+  margin-top: 0;
+}
+
+.results-summary {
+  margin: 0 0 var(--space-3);
+}
+
+.results-summary:empty {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .explore-filters {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .explore-filters__field--term,
+  .explore-filters__actions,
+  .explore-filters__notice {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 64rem) {
+  .explore-filters {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  }
+
+  .explore-filters__actions {
+    grid-column: auto;
+  }
+}

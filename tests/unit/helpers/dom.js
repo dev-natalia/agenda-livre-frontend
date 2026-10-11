@@ -40,3 +40,52 @@ export function mountHomeDom() {
     status: document.getElementById("upcoming-status"),
   };
 }
+
+// Monta em jsdom o trecho de explorar.html usado pela página Explorar (mesmos ids e atributos).
+export function mountExploreDom() {
+  document.body.innerHTML = `
+    <main id="main-content" tabindex="-1">
+      <h1>Explorar atividades</h1>
+      <form id="explore-form" role="search" aria-label="Pesquisar atividades" action="explorar.html" method="get">
+        <label for="search-q">Buscar por nome da atividade</label>
+        <input id="search-q" type="search" name="q" maxlength="100">
+        <label for="filter-unit">Unidade</label>
+        <select id="filter-unit" name="unit" aria-describedby="filter-options-status"><option value="">Todas as unidades</option></select>
+        <label for="filter-category">Categoria</label>
+        <select id="filter-category" name="category" aria-describedby="filter-options-status"><option value="">Todas as categorias</option></select>
+        <label for="filter-period">Quando?</label>
+        <select id="filter-period" name="period">
+          <option value="any">Qualquer data</option>
+          <option value="today">Hoje</option>
+          <option value="week">Próximos 7 dias</option>
+          <option value="month">Este mês</option>
+        </select>
+        <button type="submit" id="explore-submit">Filtrar</button>
+        <button type="button" id="explore-clear">Limpar filtros</button>
+        <p id="filter-options-status" role="status"></p>
+      </form>
+      <section aria-labelledby="results-heading">
+        <h2 id="results-heading" tabindex="-1">Resultados</h2>
+        <p id="results-summary"></p>
+        <div id="results-status" role="status" aria-live="polite" class="visually-hidden"></div>
+        <div id="results-content" class="card-grid"></div>
+        <nav id="results-pagination" aria-label="Paginação" hidden></nav>
+      </section>
+    </main>`;
+  const $ = (id) => document.getElementById(id);
+  return {
+    form: $("explore-form"),
+    term: $("search-q"),
+    unit: $("filter-unit"),
+    category: $("filter-category"),
+    period: $("filter-period"),
+    submit: $("explore-submit"),
+    clear: $("explore-clear"),
+    optionsStatus: $("filter-options-status"),
+    heading: $("results-heading"),
+    summary: $("results-summary"),
+    status: $("results-status"),
+    content: $("results-content"),
+    nav: $("results-pagination"),
+  };
+}
