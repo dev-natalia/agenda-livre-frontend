@@ -304,3 +304,25 @@ textarea:disabled {
   margin: 0;
   font-size: var(--font-size-small);
 }
+
+/* Pesquisa rápida: aviso de opções indisponíveis (visível só quando há texto). */
+.quick-search__notice {
+  padding: var(--space-2) var(--space-2-5);
+  border-left: var(--focus-width) solid var(--color-accent-strong);
+  background: var(--color-notice-background);
+  color: var(--color-notice-text);
+  font-size: var(--font-size-small);
+}
+
+.quick-search__notice:empty {
+  display: none;
+}
+
+/* Mensagens (carregando, vazio, erro) ocupam a linha inteira da grade de próximas atividades. */
+.upcoming .card-grid > :not(.skeleton-card):not(.activity-card) {
+  grid-column: 1 / -1;
+}
+
+.upcoming .card-grid > .error-state__retry {
+  justify-self: start;
+}

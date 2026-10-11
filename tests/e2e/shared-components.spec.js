@@ -39,7 +39,7 @@ test.describe("card de atividade", () => {
   test.use({ viewport: { width: 320, height: 640 } });
 
   test("uma parada de foco por card, com foco visível e sem rolagem horizontal", async ({ page }) => {
-    await page.goto("/index.html");
+    await page.goto("/explorar.html");
     await mountCards(page);
 
     const links = page.locator("#probe-grid a");
@@ -63,7 +63,7 @@ test.describe("card de atividade", () => {
   });
 
   test("sem imagem quebrada: o fallback ocupa o espaço da imagem", async ({ page }) => {
-    await page.goto("/index.html");
+    await page.goto("/explorar.html");
     await mountCards(page);
     await expect(page.locator("#probe-grid img")).toHaveCount(0);
     const media = page.locator("#probe-grid .activity-card__media").first();
@@ -73,9 +73,10 @@ test.describe("card de atividade", () => {
   });
 
   test("clicar no card abre os detalhes na mesma aba", async ({ page }) => {
-    await page.goto("/index.html");
+    await page.goto("/explorar.html");
     await mountCards(page);
     const card = page.locator("#probe-grid .activity-card").first();
+    await card.scrollIntoViewIfNeeded();
     const box = await card.boundingBox();
     await page.mouse.click(box.x + box.width / 2, box.y + 10);
     await expect(page).toHaveURL(/atividade\.html\?id=550e8400-e29b-41d4-a716-446655440001$/);
@@ -154,7 +155,7 @@ test.describe("estados da região", () => {
         body: JSON.stringify({ count: 1, next: null, previous: null, results: [ACTIVITIES[0]] }),
       });
     });
-    await page.goto("/index.html");
+    await page.goto("/explorar.html");
     await mountRegion(page);
 
     await page.locator("#probe-field").focus();
@@ -181,7 +182,7 @@ test.describe("estados da região", () => {
         body: JSON.stringify({ count: 0, next: null, previous: null, results: [] }),
       }),
     );
-    await page.goto("/index.html");
+    await page.goto("/explorar.html");
     await mountRegion(page);
     await page.evaluate(() => window.__load());
 
@@ -195,7 +196,7 @@ test.describe("estados da região", () => {
   test("carregamento: esqueletos ocultos da tecnologia assistiva e estáticos", async ({ page }) => {
     await overrideConfig(page);
     await page.route("**/api/v1/activities/", () => {}); // nunca responde
-    await page.goto("/index.html");
+    await page.goto("/explorar.html");
     await mountRegion(page);
     await page.evaluate(() => {
       window.__load(); // sem await: a consulta nunca termina
@@ -218,7 +219,7 @@ test.describe("estados da região", () => {
         body: JSON.stringify({ count: 1, next: null, previous: null, results: [ACTIVITIES[0]] }),
       }),
     );
-    await page.goto("/index.html");
+    await page.goto("/explorar.html");
     await mountRegion(page);
     await page.evaluate(() => window.__load());
     await expect(page.locator("#probe-content .activity-card")).toHaveCount(1);

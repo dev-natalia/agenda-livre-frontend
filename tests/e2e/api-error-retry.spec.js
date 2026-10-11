@@ -56,7 +56,7 @@ test("falha de servidor mostra erro, e Tentar novamente recupera sem recarregar"
     return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(EMPTY_LIST) });
   });
 
-  await page.goto("/index.html");
+  await page.goto("/explorar.html");
   await page.evaluate(() => (window.__marker = "mesma-pagina"));
   await mountProbe(page);
 
@@ -80,7 +80,7 @@ test("lista vazia com sucesso não é apresentada como erro", async ({ page }) =
   await page.route("**/api/v1/activities/**", (route) =>
     route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(EMPTY_LIST) }),
   );
-  await page.goto("/index.html");
+  await page.goto("/explorar.html");
   await mountProbe(page);
   await expect(page.locator("#probe-region")).toHaveAttribute("data-state", "empty");
   await expect(page.locator(".error-state__message")).toHaveCount(0);
@@ -89,7 +89,7 @@ test("lista vazia com sucesso não é apresentada como erro", async ({ page }) =
 test("falha de rede é erro com nova tentativa; 400 não oferece o botão", async ({ page }) => {
   await overrideConfig(page);
   await page.route("**/api/v1/activities/**", (route) => route.abort("connectionrefused"));
-  await page.goto("/index.html");
+  await page.goto("/explorar.html");
   await mountProbe(page);
   const region = page.locator("#probe-region");
   await expect(region).toContainText("Não foi possível conectar");
