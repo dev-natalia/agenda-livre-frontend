@@ -151,3 +151,43 @@ describe("createActivityCard", () => {
     expect(svg.getAttribute("aria-hidden")).toBe("true");
   });
 });
+
+describe("cor por categoria e ícones (feature 011)", () => {
+  it("grava data-category com o slug da API e mantém o nome escrito", () => {
+    const tag = createActivityCard(FULL).querySelector(".activity-card__category");
+    expect(tag.getAttribute("data-category")).toBe("cultura-e-artes");
+    expect(tag.textContent).toBe("Cultura e Artes");
+  });
+
+  it.each(["Cultura", "a b", 'x"y', "<script>", "", "a/b", "ÁÉ"])("não grava data-category para o slug %j", (slug) => {
+    const card = createActivityCard({ ...FULL, category: { name: "Qualquer", slug } });
+    const tag = card.querySelector(".activity-card__category");
+    expect(tag.hasAttribute("data-category")).toBe(false);
+    expect(tag.textContent).toBe("Qualquer");
+  });
+
+  it("não grava data-category sem slug", () => {
+    const card = createActivityCard({ ...FULL, category: { name: "Sem slug" } });
+    expect(card.querySelector(".activity-card__category").hasAttribute("data-category")).toBe(false);
+  });
+
+  it("os ícones de local e data são decorativos e não entram no texto da linha", () => {
+    const card = createActivityCard(FULL);
+    for (const selector of [".activity-card__unit", ".activity-card__when"]) {
+      const line = card.querySelector(selector);
+      const icon = line.querySelector("svg");
+      expect(icon, selector).not.toBeNull();
+      expect(icon.getAttribute("aria-hidden")).toBe("true");
+      expect(icon.getAttribute("focusable")).toBe("false");
+    }
+    expect(card.querySelector(".activity-card__unit").textContent).toBe("CEU Navegantes · Grajaú");
+    expect(card.querySelector("a").textContent).toBe("Oficina de dança");
+  });
+
+  it("o texto sem data também tem o ícone de calendário", () => {
+    const card = createActivityCard({ ...FULL, next_occurrence: null });
+    expect(card.querySelector(".activity-card__when svg")).not.toBeNull();
+    expect(card.querySelector(".activity-card__when").textContent).toBe("Sem data prevista");
+  });
+});
+

@@ -10,7 +10,8 @@
     "test:e2e": "playwright test",
     "test:all": "vitest run && playwright test",
     "test:a11y": "playwright test a11y",
-    "test:contract": "vitest run --config vitest.contract.config.js"
+    "test:contract": "vitest run --config vitest.contract.config.js",
+    "capture": "node tests/capture/capture-screens.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",

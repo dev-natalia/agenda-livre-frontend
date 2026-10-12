@@ -47,7 +47,7 @@ test.describe("cartão na Explorar", () => {
     await page.goto("/explorar.html");
     await expect(page.locator(".activity-card__media img")).toHaveAttribute("alt", "");
     await expect(page.locator(".activity-card__media")).toHaveAttribute("aria-hidden", "true");
-    await expect(page.getByRole("img")).toHaveCount(0);
+    await expect(page.locator("main").getByRole("img")).toHaveCount(0);
   });
 
   test("sem imagem (null): fallback sem ícone quebrado", async ({ page }) => {
@@ -94,7 +94,7 @@ test.describe("detalhes", () => {
   test("imagem decorativa não é anunciada", async ({ page }) => {
     await open(page, withImage(makeDetails(), { decorative: true }));
     await expect(page.locator(".activity-details__media img")).toHaveAttribute("alt", "");
-    await expect(page.getByRole("img")).toHaveCount(0);
+    await expect(page.locator("main").getByRole("img")).toHaveCount(0);
   });
 
   test("sem imagem mostra o fallback", async ({ page }) => {

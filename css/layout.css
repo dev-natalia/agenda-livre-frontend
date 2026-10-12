@@ -1,12 +1,19 @@
 /* Mobile-first: o estilo base vale de 320px para cima; @media (min-width) só acrescenta.
    Pontos de quebra permitidos: 40rem, 48rem, 64rem (ver tokens.css). */
-body > header,
-body > main,
-body > footer {
+body > main {
   width: 100%;
   max-width: var(--content-max-width);
   margin-inline: auto;
   padding: var(--space-3);
+}
+
+/* Cabeçalho e rodapé têm fundo de borda a borda; o conteúdo interno alinha com o de `main`
+   (mesmo eixo: metade da folga além de --content-max-width mais o recuo). */
+body > header,
+body > footer {
+  width: 100%;
+  padding: var(--space-3);
+  padding-inline: max(var(--space-3), calc((100% - var(--content-max-width)) / 2 + var(--space-3)));
 }
 
 body > main {
@@ -20,6 +27,7 @@ body > main p {
 
 body > footer {
   border-top: var(--border-width) solid var(--color-border);
+  background: var(--color-surface);
 }
 
 /* Conteúdo que exige layout bidimensional rola no próprio contêiner, nunca a página. */
@@ -34,19 +42,23 @@ body > footer {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2) var(--space-4);
+  padding-block: var(--space-2-5);
   border-bottom: var(--border-width) solid var(--color-border);
   background: var(--color-surface);
+  box-shadow: var(--shadow-header);
 }
 
 .site-header__brand {
   display: inline-flex;
   align-items: center;
   min-height: var(--target-min);
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  font-weight: 700;
   color: var(--color-primary);
-  text-decoration: none;
+}
+
+.site-header__brand img {
+  display: block;
+  width: auto;
+  height: var(--logo-height);
 }
 
 .site-nav ul,
@@ -71,11 +83,11 @@ body > footer {
   padding-block: var(--space-2);
 }
 
+/* Página atual: negrito e barra inferior espessa, sem depender só da cor. */
 .site-nav [aria-current="page"] {
   font-weight: 700;
-  text-decoration: underline;
-  text-decoration-thickness: 3px;
-  text-underline-offset: 6px;
+  text-decoration: none;
+  border-bottom: var(--focus-width) solid var(--color-primary);
 }
 
 .site-nav ul[hidden] {
@@ -101,7 +113,7 @@ body > footer {
   min-width: var(--target-min);
   padding: var(--space-2) var(--space-3);
   border: var(--border-width-control) solid var(--color-primary);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-control);
   background: var(--color-surface);
   color: var(--color-primary);
   font: inherit;
@@ -123,6 +135,10 @@ body > footer {
 
 /* 48rem = ponto de troca (ver tokens.css e js/components/site-nav.js). */
 @media (min-width: 48rem) {
+  .site-header__brand img {
+    height: var(--logo-height-wide);
+  }
+
   .site-nav {
     flex-basis: auto;
   }
@@ -143,10 +159,18 @@ body > footer {
   gap: var(--space-4);
   align-items: center;
   margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface-tint);
 }
 
 .hero__text h1 {
   margin-top: 0;
+}
+
+.hero__text p {
+  margin-bottom: 0;
+  font-size: 1.125rem;
 }
 
 .hero__image {
@@ -157,13 +181,23 @@ body > footer {
   border-radius: var(--radius-card);
 }
 
+/* A busca é uma única superfície; os campos mantêm a própria borda, sem caixas dentro de caixas. */
 .quick-search {
   margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-panel);
 }
 
 .quick-search h2,
 .upcoming h2 {
   margin-top: 0;
+}
+
+.quick-search h2 {
+  margin-bottom: var(--space-3);
 }
 
 .quick-search__form {
@@ -185,21 +219,28 @@ body > footer {
   gap: var(--space-1) var(--space-4);
 }
 
+.upcoming__header h2 {
+  margin-bottom: 0;
+}
+
 .upcoming__intro {
   margin-top: var(--space-1);
   margin-bottom: var(--space-4);
+  color: var(--color-text-muted);
 }
 
 .upcoming__all {
   display: inline-flex;
   align-items: center;
   min-height: var(--target-min);
+  font-weight: 600;
 }
 
 @media (min-width: 48rem) {
   .hero {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: var(--space-5);
+    padding: var(--space-5);
   }
 
   .quick-search__form {
@@ -218,8 +259,17 @@ body > footer {
 }
 
 @media (min-width: 64rem) {
+  .hero,
+  .quick-search {
+    margin-bottom: var(--space-8);
+  }
+
+  .quick-search {
+    padding: var(--space-5);
+  }
+
   .quick-search__form {
-    grid-template-columns: minmax(0, 1fr) repeat(3, minmax(0, 1fr)) auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
   }
 
   .quick-search__field--term {
@@ -238,7 +288,12 @@ body > footer {
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-3);
   align-items: end;
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-panel);
 }
 
 .explore-filters__actions {
@@ -253,6 +308,7 @@ body > footer {
 
 .results h2 {
   margin-top: 0;
+  margin-bottom: var(--space-2);
 }
 
 .results-summary {
@@ -318,9 +374,12 @@ body > footer {
   margin: 0 0 var(--space-2);
 }
 
-.activity-details__category {
-  color: var(--color-tag-text);
-  font-weight: 600;
+.activity-details__title {
+  margin-block: var(--space-2);
+}
+
+.activity-details__summary {
+  font-size: 1.125rem;
 }
 
 .activity-details__title,
@@ -371,9 +430,23 @@ body > footer {
 
 .prose h2 {
   margin-top: 0;
+  margin-bottom: var(--space-2);
 }
 
+.prose > p:last-child {
+  margin-top: var(--space-5);
+}
+
+/* Alinhado à esquerda, no mesmo eixo do título da página. */
 .contact {
   max-width: 40rem;
-  margin-inline: auto;
+}
+
+/* O formulário demonstrativo é uma superfície única, abaixo do aviso de demonstração. */
+.contact form {
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-panel);
 }

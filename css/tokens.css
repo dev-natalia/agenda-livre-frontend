@@ -27,6 +27,16 @@
   --color-notice-text: #1f2937;
   --color-skeleton: #e2e8f0;
   --color-empty-border: #475569;
+  --color-surface-tint: #eaf1fd;
+
+  /* Cor por categoria (guia de marca; slug da API). Texto sempre --color-brand-contrast (>= 4,5:1). */
+  --color-category-culture: #b91c1c;
+  --color-category-sport: #15803d;
+  --color-category-courses: #1d4ed8;
+  --color-category-events: #7e22ce;
+  --color-category-health: #0f766e;
+  --color-category-leisure: #c2410c;
+  --color-category-education: #be185d;
 
   /* Tipografia */
   --font-heading: Poppins, "Poppins Fallback", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
@@ -49,13 +59,18 @@
   --space-5: 2rem;
   --space-6: 3rem;
   --space-7: 4rem;
+  --space-8: 5rem;
 
   /* Forma */
   --radius-sm: 4px;
-  --radius-card: 8px;
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-panel: 16px;
   --border-width: 1px;
   --border-width-control: 2px;
-  --shadow-card: 0 1px 3px rgb(31 41 55 / 0.12);
+  --shadow-card: 0 1px 2px rgb(31 41 55 / 0.08), 0 2px 8px rgb(31 41 55 / 0.06);
+  --shadow-header: 0 1px 0 rgb(31 41 55 / 0.06), 0 2px 8px rgb(31 41 55 / 0.05);
+  --shadow-panel: 0 2px 4px rgb(31 41 55 / 0.06), 0 6px 16px rgb(31 41 55 / 0.06);
   --card-media-ratio: 16 / 9;
 
   /* Foco */
@@ -70,6 +85,8 @@
 
   /* Alvos de toque e largura */
   --target-min: 2.75rem;
-  --content-max-width: 72rem;
+  --content-max-width: 80rem;
+  --logo-height: 2.5rem;
+  --logo-height-wide: 3.25rem;
   --reading-max-width: 65ch;
 }

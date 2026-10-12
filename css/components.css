@@ -10,7 +10,7 @@
   min-width: var(--target-min);
   padding: var(--space-2) var(--space-4);
   border: var(--border-width-control) solid var(--color-action);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-control);
   background: var(--color-action);
   color: var(--color-brand-contrast);
   font: inherit;
@@ -82,24 +82,28 @@
   outline-offset: var(--focus-offset);
 }
 
-/* Mensagens: erro (borda esquerda grossa), carregando (pontilhada), vazio (tracejada). */
+/* Mensagens: erro (borda esquerda grossa), carregando (pontilhada), vazio (tracejada).
+   As formas distintas são mantidas: o estado nunca depende só da cor. */
 .error-state__message {
+  max-width: none;
   margin: 0 0 var(--space-3);
-  padding: var(--space-3);
+  padding: var(--space-4);
   border: var(--border-width-control) solid var(--color-border);
   border-left-width: 6px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-panel);
   background: var(--color-notice-background);
   color: var(--color-notice-text);
 }
 
 .region-state__loading,
 .region-state__empty {
+  max-width: none;
   margin: 0 0 var(--space-3);
-  padding: var(--space-3);
+  padding: var(--space-5) var(--space-4);
   border: var(--border-width-control) solid var(--color-empty-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-panel);
   background: var(--color-surface);
+  text-align: center;
 }
 
 .region-state__loading {
@@ -112,12 +116,15 @@
 
 .region-state__title {
   display: block;
-  font-weight: 700;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-card-title);
+  font-weight: 600;
 }
 
 .region-state__hint {
   display: block;
   margin-top: var(--space-1);
+  color: var(--color-text-muted);
 }
 
 /* Esqueletos são estáticos. Se um dia animarem, a regra central de base.css os desliga. */
@@ -143,7 +150,7 @@ textarea {
   min-height: var(--target-min);
   padding: var(--space-2) var(--space-2-5);
   border: var(--border-width-control) solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-control);
   background: var(--color-surface);
   color: var(--color-text);
   font: inherit;
@@ -262,15 +269,19 @@ textarea:disabled {
 
 .activity-card__body {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: var(--space-2);
   padding: var(--space-3);
   overflow-wrap: anywhere;
 }
 
-/* Etiqueta: tratamento neutro padrão; o nome da categoria é sempre escrito. */
-.activity-card__category {
+/* Etiqueta de categoria: tratamento neutro por padrão; o nome é sempre escrito.
+   Com `data-category` (slug da API), fundo sólido por categoria e texto branco (>= 4,5:1). */
+.activity-card__category,
+.activity-details__category {
   align-self: flex-start;
+  display: inline-block;
   margin: 0;
   padding: var(--space-1) var(--space-2);
   border: var(--border-width) solid var(--color-tag-text);
@@ -279,6 +290,55 @@ textarea:disabled {
   color: var(--color-tag-text);
   font-size: var(--font-size-small);
   font-weight: 700;
+}
+
+.activity-card__category[data-category="cultura-e-artes"],
+.activity-details__category[data-category="cultura-e-artes"] {
+  border-color: var(--color-category-culture);
+  background: var(--color-category-culture);
+  color: var(--color-brand-contrast);
+}
+
+.activity-card__category[data-category="esporte-e-atividade-fisica"],
+.activity-details__category[data-category="esporte-e-atividade-fisica"] {
+  border-color: var(--color-category-sport);
+  background: var(--color-category-sport);
+  color: var(--color-brand-contrast);
+}
+
+.activity-card__category[data-category="cursos-e-formacao"],
+.activity-details__category[data-category="cursos-e-formacao"] {
+  border-color: var(--color-category-courses);
+  background: var(--color-category-courses);
+  color: var(--color-brand-contrast);
+}
+
+.activity-card__category[data-category="eventos-e-encontros"],
+.activity-details__category[data-category="eventos-e-encontros"] {
+  border-color: var(--color-category-events);
+  background: var(--color-category-events);
+  color: var(--color-brand-contrast);
+}
+
+.activity-card__category[data-category="saude-e-bem-estar"],
+.activity-details__category[data-category="saude-e-bem-estar"] {
+  border-color: var(--color-category-health);
+  background: var(--color-category-health);
+  color: var(--color-brand-contrast);
+}
+
+.activity-card__category[data-category="lazer-e-recreacao"],
+.activity-details__category[data-category="lazer-e-recreacao"] {
+  border-color: var(--color-category-leisure);
+  background: var(--color-category-leisure);
+  color: var(--color-brand-contrast);
+}
+
+.activity-card__category[data-category="educacao-e-meio-ambiente"],
+.activity-details__category[data-category="educacao-e-meio-ambiente"] {
+  border-color: var(--color-category-education);
+  background: var(--color-category-education);
+  color: var(--color-brand-contrast);
 }
 
 .activity-card__title {
@@ -303,6 +363,24 @@ textarea:disabled {
 .activity-card__when {
   margin: 0;
   font-size: var(--font-size-small);
+}
+
+/* A data fica na base do card: cards da mesma linha alinham a última linha. */
+.activity-card__when {
+  margin-top: auto;
+}
+
+/* Linha de metadado: ícone decorativo à esquerda, texto à direita. */
+.meta-line {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.meta-icon {
+  flex: none;
+  margin-top: 0.2em;
+  color: var(--color-text-muted);
 }
 
 /* Pesquisa rápida: aviso de opções indisponíveis (visível só quando há texto). */
@@ -459,7 +537,7 @@ textarea {
 .confirmation {
   padding: var(--space-4);
   border: var(--border-width-control) solid var(--color-border);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-panel);
   background: var(--color-surface);
 }
 
@@ -474,7 +552,8 @@ textarea {
 .demo-notice {
   padding: var(--space-3);
   border: var(--border-width-control) solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-left-width: 6px;
+  border-radius: var(--radius-control);
   background: var(--color-notice-background);
   color: var(--color-notice-text);
 }

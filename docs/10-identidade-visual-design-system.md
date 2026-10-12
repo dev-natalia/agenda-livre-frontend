@@ -51,6 +51,7 @@ A paleta principal combina azul, laranja e amarelo, apoiada por cores neutras.
 - Textos sobre botões e etiquetas coloridas devem ter contraste suficiente; verificar o contraste real de cada combinação durante a implementação.
 - Estados de sucesso, aviso e erro devem incluir texto ou ícones identificáveis, e não depender somente da cor.
 - As cores de categoria podem variar por categoria, desde que mantenham legibilidade e não sejam a única forma de identificar a categoria.
+- **Cor por categoria (feature 011):** a etiqueta usa fundo sólido por **slug** da API, com texto branco (contraste mínimo 4,5:1): `cultura-e-artes` `#B91C1C`, `esporte-e-atividade-fisica` `#15803D`, `cursos-e-formacao` `#1D4ED8`, `eventos-e-encontros` `#7E22CE`, `saude-e-bem-estar` `#0F766E`, `lazer-e-recreacao` `#C2410C`, `educacao-e-meio-ambiente` `#BE185D`. Categoria sem cor definida usa o tratamento neutro. Para uma categoria nova, acrescente o token em `css/tokens.css`, a regra em `css/components.css` e o par em `tests/unit/category-colors.test.js`. Os nomes Dança, Música e Teatro do guia de marca são exemplos do protótipo, não categorias existentes.
 
 Os códigos acima constituem a paleta inicial do projeto e podem ser refinados após testes de contraste e validação visual.
 
@@ -69,7 +70,17 @@ O logotipo será predominantemente tipográfico, com o nome **Agenda Livre** com
 - Usar um símbolo reduzido ou favicon somente quando o espaço não permitir a marca completa.
 - Preservar espaço livre ao redor da marca e não distorcer suas proporções.
 
-O conceito está definido, mas os arquivos finais do logotipo, suas dimensões e suas versões técnicas ainda precisam ser preparados e validados.
+### 4.3 Arquivos (feature 011)
+
+Os arquivos do guia de marca (`docs/Guia de Marca Agenda Livre.png`) foram redesenhados em SVG e estão em `images/brand/`:
+
+| Arquivo | Uso |
+|---|---|
+| `images/brand/logo.svg` | logo principal no cabeçalho de todas as páginas (azul `#1E40AF`, raios laranja e amarelo; texto em curvas) |
+| `images/brand/icon.svg` | ícone da aba do navegador |
+| `images/brand/apple-touch-icon.png` | ícone para iOS (180×180) |
+
+O logo é link para o Início, com o nome acessível "Agenda Livre". Não há versão para fundo escuro, porque o site não tem fundos escuros; se passar a ter, ela entra aqui. Contrato: `specs/011-visual-refinement/contracts/brand-assets.md`.
 
 ## 5. Tipografia
 
@@ -229,7 +240,7 @@ A imagem é uma referência conceitual, não uma especificação pixel a pixel n
 Antes de considerar o design system definitivo, será necessário:
 
 - Validar as combinações de cores e o contraste.
-- Definir os arquivos finais e as variações do logotipo.
+- ~~Definir os arquivos finais e as variações do logotipo.~~ Feito na feature 011 (seção 4.3); a versão para fundo escuro segue sem uso.
 - Confirmar os tamanhos tipográficos e a escala de espaçamento na implementação.
 - Definir os pontos de quebra responsivos.
 - Validar o uso de imagens e os estados sem imagem.
