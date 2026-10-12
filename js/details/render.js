@@ -136,10 +136,16 @@ export function renderDetails(data) {
     throw new ApiError("invalid_response");
   }
   const article = el("article", "activity-details__article");
-  article.append(media(data.image), header(data), whenSection(data));
-  for (const part of [audienceSection(data), descriptionSection(data), placeSection(data), externalLink(data)]) {
-    if (part) article.append(part);
+  // Informações práticas (quando, público, local, inscrição) ficam num bloco próprio, que o CSS
+  // coloca ao lado do texto em telas largas; a descrição longa segue depois dele.
+  const practical = el("div", "activity-details__practical");
+  practical.append(whenSection(data));
+  for (const part of [audienceSection(data), placeSection(data), externalLink(data)]) {
+    if (part) practical.append(part);
   }
+  article.append(media(data.image), header(data), practical);
+  const description = descriptionSection(data);
+  if (description) article.append(description);
   return [article];
 }
 

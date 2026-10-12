@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 440" width="520" height="440" aria-hidden="true" focusable="false">
+  <style>
+    .ray { transform-box: fill-box; transform-origin: 0% 100%; animation: ray-in 520ms cubic-bezier(.2,.8,.2,1) both; }
+    .r2 { animation-delay: 80ms; }
+    .r3 { animation-delay: 160ms; }
+    .r4 { animation-delay: 240ms; }
+    .r5 { animation-delay: 320ms; }
+    .r6 { animation-delay: 400ms; }
+    @keyframes ray-in { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .ray { animation: none; } }
+  </style>
+  <circle cx="360" cy="296" r="140" fill="#F97316"/>
+  <circle cx="176" cy="164" r="92" fill="#FACC15"/>
+  <g transform="rotate(-4 260 240)">
+    <rect x="130" y="120" width="260" height="236" rx="24" fill="#FFFFFF"/>
+    <path d="M130 144a24 24 0 0 1 24-24h212a24 24 0 0 1 24 24v36H130z" fill="#2563EB"/>
+    <rect x="178" y="98" width="14" height="46" rx="7" fill="#1E40AF"/>
+    <rect x="328" y="98" width="14" height="46" rx="7" fill="#1E40AF"/>
+    <g fill="#DBE7FA">
+      <rect x="158" y="204" width="36" height="30" rx="8"/><rect x="206" y="204" width="36" height="30" rx="8"/>
+      <rect x="254" y="204" width="36" height="30" rx="8"/><rect x="302" y="204" width="36" height="30" rx="8"/>
+      <rect x="158" y="248" width="36" height="30" rx="8"/><rect x="254" y="248" width="36" height="30" rx="8"/>
+      <rect x="302" y="248" width="36" height="30" rx="8"/><rect x="158" y="292" width="36" height="30" rx="8"/>
+      <rect x="206" y="292" width="36" height="30" rx="8"/><rect x="302" y="292" width="36" height="30" rx="8"/>
+    </g>
+    <rect x="206" y="248" width="36" height="30" rx="8" fill="#F97316"/>
+    <rect x="254" y="292" width="36" height="30" rx="8" fill="#FACC15"/>
+  </g>
+  <g stroke-linecap="round" fill="none" stroke-width="14">
+    <path class="ray r1" d="M64 150 38 126" stroke="#FACC15"/>
+    <path class="ray r2" d="M78 104 62 72" stroke="#F97316"/>
+    <path class="ray r3" d="M118 74 112 40" stroke="#FFFFFF"/>
+    <path class="ray r4" d="M420 70 438 40" stroke="#FACC15"/>
+    <path class="ray r5" d="M456 112 490 98" stroke="#FFFFFF"/>
+    <path class="ray r6" d="M468 160 500 166" stroke="#F97316"/>
+  </g>
+</svg>

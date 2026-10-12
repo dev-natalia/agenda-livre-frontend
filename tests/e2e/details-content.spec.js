@@ -22,7 +22,8 @@ test.describe("conteúdo dos detalhes", () => {
     await expect(article).toContainText("Adultos");
     await expect(article).toContainText("Iniciantes são bem-vindos.");
     await expect(page.locator(".activity-details__description")).toHaveText(/Descrição completa\.\s+Segunda linha\./);
-    await expect(page.locator("main h2")).toHaveText(["Quando", "Público", "Sobre a atividade", "Local"]);
+    // Refinamento visual: informações práticas agrupadas antes da descrição longa.
+    await expect(page.locator("main h2")).toHaveText(["Quando", "Público", "Local", "Sobre a atividade"]);
   });
 
   test("a descrição preserva a quebra de linha", async ({ page }) => {

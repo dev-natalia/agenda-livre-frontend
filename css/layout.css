@@ -25,8 +25,12 @@ body > main p {
   max-width: var(--reading-max-width);
 }
 
+body > main > h1 {
+  margin-block: var(--space-3) var(--space-2);
+}
+
 body > footer {
-  border-top: var(--border-width) solid var(--color-border);
+  border-top: var(--border-width) solid var(--color-line);
   background: var(--color-surface);
 }
 
@@ -43,7 +47,7 @@ body > footer {
   justify-content: space-between;
   gap: var(--space-2) var(--space-4);
   padding-block: var(--space-2-5);
-  border-bottom: var(--border-width) solid var(--color-border);
+  border-bottom: var(--border-width) solid var(--color-line);
   background: var(--color-surface);
   box-shadow: var(--shadow-header);
 }
@@ -83,11 +87,29 @@ body > footer {
   padding-block: var(--space-2);
 }
 
+.site-nav a {
+  color: var(--color-text);
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: var(--focus-width) solid transparent;
+}
+
+.site-nav a:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+  border-bottom-color: var(--color-line);
+}
+
 /* Página atual: negrito e barra inferior espessa, sem depender só da cor. */
 .site-nav [aria-current="page"] {
+  color: var(--color-primary);
   font-weight: 700;
   text-decoration: none;
   border-bottom: var(--focus-width) solid var(--color-primary);
+}
+
+.site-nav [aria-current="page"]:hover {
+  border-bottom-color: var(--color-primary);
 }
 
 .site-nav ul[hidden] {
@@ -153,42 +175,51 @@ body > footer {
   }
 }
 
-/* Página inicial: apresentação, pesquisa rápida e próximas atividades. */
+/* Página inicial: o hero é o muro pintado do CEU (azul da marca, raios do logo); a busca fica
+   sobreposta à sua base, como um aviso fixado no muro. */
 .hero {
+  position: relative;
   display: grid;
   gap: var(--space-4);
   align-items: center;
-  margin-bottom: var(--space-6);
-  padding: var(--space-4);
-  border-radius: var(--radius-panel);
-  background: var(--color-surface-tint);
+  padding: var(--space-5) var(--space-4) var(--space-7);
+  border-radius: var(--radius-hero);
+  background: var(--color-primary);
+  color: var(--color-brand-contrast);
 }
 
 .hero__text h1 {
   margin-top: 0;
+  margin-bottom: var(--space-3);
+  color: var(--color-brand-contrast);
+  font-size: var(--font-size-hero);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
 }
 
 .hero__text p {
   margin-bottom: 0;
-  font-size: 1.125rem;
+  color: var(--color-brand-contrast);
+  font-size: 1.25rem;
 }
 
 .hero__image {
   display: block;
   width: 100%;
-  max-width: 100%;
+  max-width: 16rem;
   height: auto;
-  border-radius: var(--radius-card);
+  justify-self: end;
 }
 
 /* A busca é uma única superfície; os campos mantêm a própria borda, sem caixas dentro de caixas. */
 .quick-search {
-  margin-bottom: var(--space-6);
+  position: relative;
+  margin: calc(-1 * var(--space-5)) var(--space-2) var(--space-6);
   padding: var(--space-4);
-  border: var(--border-width) solid var(--color-border);
+  border: var(--border-width) solid var(--color-line);
   border-radius: var(--radius-panel);
   background: var(--color-surface);
-  box-shadow: var(--shadow-panel);
+  box-shadow: var(--shadow-float);
 }
 
 .quick-search h2,
@@ -198,6 +229,7 @@ body > footer {
 
 .quick-search h2 {
   margin-bottom: var(--space-3);
+  font-size: 1.25rem;
 }
 
 .quick-search__form {
@@ -221,6 +253,7 @@ body > footer {
 
 .upcoming__header h2 {
   margin-bottom: 0;
+  font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
 }
 
 .upcoming__intro {
@@ -238,9 +271,18 @@ body > footer {
 
 @media (min-width: 48rem) {
   .hero {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
     gap: var(--space-5);
-    padding: var(--space-5);
+    padding: var(--space-6) var(--space-6) calc(var(--space-8) + var(--space-3));
+  }
+
+  .hero__image {
+    max-width: 100%;
+  }
+
+  .quick-search {
+    margin: calc(-1 * var(--space-7)) var(--space-5) var(--space-6);
+    padding: var(--space-4) var(--space-5) var(--space-5);
   }
 
   .quick-search__form {
@@ -259,13 +301,13 @@ body > footer {
 }
 
 @media (min-width: 64rem) {
-  .hero,
-  .quick-search {
-    margin-bottom: var(--space-8);
+  .hero {
+    padding-inline: var(--space-7);
   }
 
   .quick-search {
-    padding: var(--space-5);
+    margin-inline: var(--space-7);
+    margin-bottom: var(--space-8);
   }
 
   .quick-search__form {
@@ -290,9 +332,8 @@ body > footer {
   align-items: end;
   margin-bottom: var(--space-6);
   padding: var(--space-4);
-  border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-panel);
-  background: var(--color-surface);
+  background: var(--color-surface-tint);
   box-shadow: var(--shadow-panel);
 }
 
@@ -308,7 +349,7 @@ body > footer {
 
 .results h2 {
   margin-top: 0;
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
 }
 
 .results-summary {
@@ -419,6 +460,62 @@ body > footer {
   margin: 0;
 }
 
+.activity-details__practical {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface-tint);
+}
+
+.activity-details__practical .activity-details__section + .activity-details__section {
+  padding-top: var(--space-4);
+  border-top: var(--border-width) solid var(--color-line);
+}
+
+.activity-details__practical .activity-details__section-title {
+  margin-bottom: var(--space-2);
+  font-size: 1.25rem;
+}
+
+.activity-details__title {
+  font-size: var(--font-size-h1);
+}
+
+/* Em telas largas: imagem, título e descrição à esquerda; informações práticas ao lado. */
+@media (min-width: 64rem) {
+  .activity-details__article {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    grid-template-areas:
+      "media practical"
+      "header practical"
+      "description practical";
+    grid-template-rows: auto auto 1fr;
+    column-gap: var(--space-6);
+    row-gap: var(--space-4);
+    align-items: start;
+    max-width: none;
+  }
+
+  .activity-details__media {
+    grid-area: media;
+  }
+
+  .activity-details__header {
+    grid-area: header;
+  }
+
+  .activity-details__practical {
+    grid-area: practical;
+  }
+
+  .activity-details__article > .activity-details__section {
+    grid-area: description;
+  }
+}
+
 /* Páginas institucionais (Sobre) e de contato: coluna de leitura. */
 .prose {
   max-width: var(--reading-max-width);
@@ -426,6 +523,8 @@ body > footer {
 
 .prose section + section {
   margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: var(--border-width) solid var(--color-line);
 }
 
 .prose h2 {
@@ -445,7 +544,7 @@ body > footer {
 /* O formulário demonstrativo é uma superfície única, abaixo do aviso de demonstração. */
 .contact form {
   padding: var(--space-4);
-  border: var(--border-width) solid var(--color-border);
+  border: var(--border-width) solid var(--color-line);
   border-radius: var(--radius-panel);
   background: var(--color-surface);
   box-shadow: var(--shadow-panel);
