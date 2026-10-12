@@ -15,7 +15,7 @@ function createElement(tag, className, text) {
 }
 
 // Ícone padrão (calendário), puramente decorativo.
-function defaultIcon() {
+export function defaultIcon() {
   const svg = document.createElementNS(SVG_NS, "svg");
   svg.setAttribute("viewBox", "0 0 24 24");
   svg.setAttribute("width", "48");

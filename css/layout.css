@@ -284,3 +284,70 @@ body > footer {
     grid-column: auto;
   }
 }
+
+/* Detalhes da atividade: coluna única de leitura; seções só existem quando há conteúdo. */
+.details-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  margin-bottom: var(--space-3);
+}
+
+.activity-details__article {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 48rem;
+}
+
+.activity-details__media {
+  aspect-ratio: var(--card-media-ratio);
+  width: 100%;
+  border-radius: var(--radius-card);
+}
+
+.activity-details__header > * {
+  margin: 0 0 var(--space-2);
+}
+
+.activity-details__category {
+  color: var(--color-tag-text);
+  font-weight: 600;
+}
+
+.activity-details__title,
+.activity-details__section-title,
+.activity-details__summary,
+.activity-details__unit,
+.activity-details__place,
+.activity-details__notes,
+.activity-details__description,
+.activity-details__period,
+.activity-details__weekdays,
+.activity-details__time {
+  overflow-wrap: anywhere;
+}
+
+.activity-details__section-title,
+.activity-details__subtitle {
+  margin-top: 0;
+}
+
+.activity-details__description {
+  white-space: pre-line;
+}
+
+.activity-details__schedules,
+.activity-details__upcoming,
+.activity-details__audiences {
+  margin: 0 0 var(--space-3);
+  padding-left: var(--space-4);
+}
+
+.activity-details__schedule p {
+  margin: 0;
+}
+
+.activity-details__actions {
+  margin: 0;
+}

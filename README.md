@@ -26,6 +26,8 @@ Depois abra `http://localhost:5500/`.
 
 A página Explorar guarda termo, filtros e página no endereço (`q`, `unit`, `category`, `date`, `date_from`, `date_to`, `page`; contrato em `specs/006-activity-exploration/contracts/explore-url.md`), usa o histórico nativo do navegador e guarda por 5 minutos uma cópia dos resultados em `sessionStorage` para a volta dos detalhes.
 
+A página de detalhes abre por `atividade.html?id=<uuid>` (o mesmo endereço dos cards; contrato em `specs/007-activity-details/contracts/details-url.md`) e consulta `GET /activities/{id}/`. Mostra categoria, título, unidade, programações (pontuais e recorrentes), próximas datas, público, descrição e local, omitindo o que a API não informar. A API responde o mesmo `404` para atividade inexistente, malformada, cancelada ou encerrada, então todos esses casos (e `id` ausente ou inválido, que nem chega à API) mostram um único estado "Atividade não encontrada ou não disponível"; falhas de comunicação mostram erro com "Tentar novamente". O link de inscrição ou informações só aparece para URLs `http`/`https`, abre em nova aba com `rel="noopener noreferrer"` e indica no texto que é um site externo. "Voltar para atividades" usa o histórico quando a pessoa veio da Explorar (restaurando filtros, página e rolagem) e leva à Explorar sem critérios nos demais casos.
+
 Cada página abre diretamente pela própria URL. Os links usam caminhos relativos para funcionar também em subcaminhos.
 
 ## Organização dos arquivos

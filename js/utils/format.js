@@ -43,6 +43,27 @@ export function formatOccurrence(occurrence) {
   };
 }
 
+const DAY_FORMAT = new Intl.DateTimeFormat("pt-BR", {
+  timeZone: "UTC",
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+// Dia do calendário por extenso ("20 de novembro de 2026"); null para valores inválidos.
+export function formatDay(value) {
+  const date = parseDate(value);
+  return date ? DAY_FORMAT.format(date) : null;
+}
+
+// "14h00 às 15h00", "14h00" (sem fim) ou null (sem início ou início inválido).
+export function formatTimeRange(startValue, endValue) {
+  const start = parseTime(startValue);
+  if (!start) return null;
+  const end = parseTime(endValue);
+  return end ? `${label(start)} às ${label(end)}` : label(start);
+}
+
 export function activityDetailsUrl(id) {
   const params = new URLSearchParams({ id: String(id) });
   return `atividade.html?${params}`;

@@ -7,7 +7,7 @@ vi.mock("../../js/config.js", () => ({
 }));
 
 import { createRequestScope } from "../../js/api/client.js";
-import { PAGE_SIZE, fetchActivities, fetchCategories, fetchUnits, fetchUpcomingActivities } from "../../js/api/public.js";
+import { PAGE_SIZE, fetchActivities, fetchActivityDetails, fetchCategories, fetchUnits, fetchUpcomingActivities } from "../../js/api/public.js";
 import { todayInSaoPaulo } from "../../js/utils/dates.js";
 import { jsonResponse } from "./helpers/fake-fetch.js";
 
@@ -145,5 +145,76 @@ describe("fetchActivities", () => {
     await expect(
       fetchActivities({ criteria: base, page: 1, fetchImpl: fetchReturning(() => new Response("<html>")) }),
     ).rejects.toMatchObject({ category: "invalid_response" });
+  });
+});
+
+describe("fetchActivityDetails", () => {
+  const ID = "550e8400-e29b-41d4-a716-446655440001";
+
+  it("consulta GET /activities/<id>/ sem parâmetros", async () => {
+    const fetchImpl = fetchReturning(() => jsonResponse({ id: ID, title: "X" }));
+    await fetchActivityDetails(ID, { fetchImpl });
+    const url = new URL(String(fetchImpl.mock.calls[0][0]));
+    expect(url.pathname).toBe(`/api/v1/activities/${ID}/`);
+    expect(url.search).toBe("");
+  });
+
+  it("codifica o identificador no caminho", async () => {
+    const fetchImpl = fetchReturning(() => jsonResponse({}));
+    await fetchActivityDetails("a/b?c", { fetchImpl });
+    const url = new URL(String(fetchImpl.mock.calls[0][0]));
+    expect(url.pathname).toBe("/api/v1/activities/a%2Fb%3Fc/");
+    expect(url.search).toBe("");
+  });
+
+  it("cancela a consulta anterior do mesmo escopo", async () => {
+    const scope = createRequestScope();
+    let calls = 0;
+    const fetchImpl = vi.fn((url, init) => {
+      calls += 1;
+      if (calls === 1) {
+        return new Promise((_, reject) =>
+          init.signal.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError"))),
+        );
+      }
+      return Promise.resolve(jsonResponse({ id: ID, title: "X" }));
+    });
+    const a = fetchActivityDetails(ID, { scope, fetchImpl });
+    const b = fetchActivityDetails(ID, { scope, fetchImpl });
+    await expect(a).rejects.toMatchObject({ category: "cancelled" });
+    await expect(b).resolves.toMatchObject({ id: ID });
+  });
+
+  it.each([
+    [404, "not_found"],
+    [400, "bad_request"],
+    [429, "rate_limited"],
+    [500, "server"],
+  ])("propaga ApiError para %i", async (status, category) => {
+    const fetchImpl = fetchReturning(() => jsonResponse({ detail: "x" }, { status }));
+    await expect(fetchActivityDetails(ID, { fetchImpl })).rejects.toMatchObject({ category });
+  });
+
+  it("propaga falha de rede e JSON inválido", async () => {
+    await expect(
+      fetchActivityDetails(ID, { fetchImpl: vi.fn(async () => Promise.reject(new TypeError("x"))) }),
+    ).rejects.toMatchObject({ category: "network" });
+    await expect(
+      fetchActivityDetails(ID, { fetchImpl: fetchReturning(() => new Response("<html>", { status: 200 })) }),
+    ).rejects.toMatchObject({ category: "invalid_response" });
+  });
+
+  it("propaga tempo esgotado", async () => {
+    vi.useFakeTimers();
+    const fetchImpl = vi.fn(
+      (url, init) =>
+        new Promise((_, reject) =>
+          init.signal.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError"))),
+        ),
+    );
+    const promise = fetchActivityDetails(ID, { fetchImpl });
+    const assertion = expect(promise).rejects.toMatchObject({ category: "timeout" });
+    await vi.advanceTimersByTimeAsync(15001);
+    await assertion;
   });
 });

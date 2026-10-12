@@ -36,6 +36,59 @@ export function makeListing(total, { page = 1, pageSize = 12, base = "http://loc
   };
 }
 
+export const DETAILS_ID = "550e8400-e29b-41d4-a716-446655440001";
+
+// Corpo de `GET /activities/{id}/` (contrato do backend, public-api.md).
+export function makeDetails(overrides = {}) {
+  return {
+    id: DETAILS_ID,
+    title: "Oficina de dança",
+    slug: "oficina-de-danca",
+    summary: "Aprenda os primeiros passos.",
+    description: "Descrição completa.\nSegunda linha.",
+    target_audience_notes: "Iniciantes são bem-vindos.",
+    unit: {
+      id: "11111111-1111-4111-8111-111111111111",
+      name: "CEU Navegantes",
+      slug: "ceu-navegantes",
+      address: "Rua das Flores, 100",
+      neighborhood: "Grajaú",
+    },
+    category: { id: "33333333-3333-4333-8333-333333333333", name: "Cultura e Artes", slug: "cultura-e-artes" },
+    target_audiences: [{ id: "a1", name: "Adultos" }],
+    external_registration_url: null,
+    schedules: [
+      {
+        id: "s1",
+        schedule_type: "ONE_TIME",
+        start_date: "2026-11-20",
+        end_date: "2026-11-20",
+        start_time: "10:00",
+        end_time: "11:00",
+        weekdays: [],
+        weekday_names: [],
+      },
+      {
+        id: "s2",
+        schedule_type: "RECURRING",
+        start_date: "2026-11-01",
+        end_date: "2026-12-31",
+        start_time: "14:00",
+        end_time: "15:00",
+        weekdays: [2, 4],
+        weekday_names: ["Terça-feira", "Quinta-feira"],
+      },
+    ],
+    next_occurrences: [
+      { date: "2026-11-03", start_time: "14:00", end_time: "15:00" },
+      { date: "2026-11-05", start_time: "14:00", end_time: "15:00" },
+    ],
+    ...overrides,
+  };
+}
+
+const DETAIL_PATH = /\/activities\/[0-9a-f-]{36}\/?$/i;
+
 const envelope = (results) => JSON.stringify({ count: results.length, next: null, previous: null, results });
 
 // Aponta o frontend para a API simulada (mesmo padrão de api-error-retry.spec.js).
@@ -66,6 +119,7 @@ export async function mockApi(
     failUnits = null,
     failCategories = null,
     activitiesResponder = null,
+    detailsResponder = null,
   } = {},
 ) {
   const requests = [];
@@ -76,6 +130,25 @@ export async function mockApi(
     const url = new URL(route.request().url());
     requests.push({ path: url.pathname, search: url.search });
     const answer = (await activitiesResponder(url)) ?? {};
+    if (answer.delayMs) await new Promise((resolve) => setTimeout(resolve, answer.delayMs));
+    if (answer.network) return route.abort("connectionrefused");
+    return route.fulfill({
+      status: answer.status ?? 200,
+      headers: CORS,
+      contentType: "application/json",
+      body: JSON.stringify(answer.body ?? {}),
+    });
+  }
+
+  // `detailsResponder(id, url)` devolve { status = 200, body, delayMs, network }; padrão: 404 do contrato.
+  async function handleDetails(route) {
+    const url = new URL(route.request().url());
+    requests.push({ path: url.pathname, search: url.search });
+    const id = url.pathname.split("/").filter(Boolean).pop();
+    const answer = (detailsResponder ? await detailsResponder(id, url) : null) ?? {
+      status: 404,
+      body: { detail: "Não encontrado." },
+    };
     if (answer.delayMs) await new Promise((resolve) => setTimeout(resolve, answer.delayMs));
     if (answer.network) return route.abort("connectionrefused");
     return route.fulfill({
@@ -100,7 +173,9 @@ export async function mockApi(
 
   await overrideConfig(page);
   await page.route(`${API}/activities/**`, (route) =>
-    activitiesResponder ? handleActivities(route) : handle(route, "failActivities", activities),
+    DETAIL_PATH.test(new URL(route.request().url()).pathname)
+      ? handleDetails(route)
+      : activitiesResponder ? handleActivities(route) : handle(route, "failActivities", activities),
   );
   await page.route(`${API}/units/**`, (route) => handle(route, "failUnits", units));
   await page.route(`${API}/categories/**`, (route) => handle(route, "failCategories", categories));
