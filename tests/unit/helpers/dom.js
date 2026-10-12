@@ -89,3 +89,15 @@ export function mountExploreDom() {
     nav: $("results-pagination"),
   };
 }
+
+// Monta em jsdom o trecho de atividade.html usado pela página de detalhes (mesmos ids e atributos).
+export function mountDetailsDom() {
+  document.body.innerHTML = `
+    <main id="main-content" tabindex="-1">
+      <a id="details-back" class="details-back" href="explorar.html">← Voltar para atividades</a>
+      <div id="details-status" class="visually-hidden" role="status" aria-live="polite"></div>
+      <div id="details-content" class="activity-details"></div>
+    </main>`;
+  const $ = (id) => document.getElementById(id);
+  return { back: $("details-back"), status: $("details-status"), content: $("details-content") };
+}

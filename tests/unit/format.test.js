@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { activityDetailsUrl, formatOccurrence } from "../../js/utils/format.js";
+import { activityDetailsUrl, formatDay, formatOccurrence } from "../../js/utils/format.js";
 
 describe("formatOccurrence", () => {
   it("formata data e horário de início e fim", () => {
@@ -53,5 +53,18 @@ describe("activityDetailsUrl", () => {
 
   it("codifica caracteres especiais", () => {
     expect(activityDetailsUrl("a b&c")).toBe("atividade.html?id=a+b%26c");
+  });
+});
+
+describe("formatDay", () => {
+  it("formata o dia do calendário por extenso, sem recuar por fuso", () => {
+    expect(formatDay("2026-11-20")).toBe("20 de novembro de 2026");
+    expect(formatDay("2026-01-01")).toBe("1 de janeiro de 2026");
+  });
+
+  it("devolve null para valores inválidos", () => {
+    expect(formatDay("2026-02-30")).toBeNull();
+    expect(formatDay("lixo")).toBeNull();
+    expect(formatDay(null)).toBeNull();
   });
 });
