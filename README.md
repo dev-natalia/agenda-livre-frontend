@@ -37,6 +37,8 @@ Cada página abre diretamente pela própria URL. Os links usam caminhos relativo
 ```text
 index.html, explorar.html, atividade.html, sobre.html, contato.html
 fonts/              Inter e Poppins (.woff2, hospedadas localmente)
+images/             hero-culture.svg (ilustração do Início)
+  brand/            logo.svg, icon.svg (aba) e apple-touch-icon.png, do guia de marca (DOC-10 §4.3)
 css/
   tokens.css        única fonte dos valores visuais (cores, fontes, espaçamentos, foco, movimento)
   base.css          fontes (@font-face), tipografia, links, foco visível, regra central de movimento reduzido
@@ -53,6 +55,7 @@ js/
     site-nav.js       menu móvel (botão de divulgação) do cabeçalho
     activity-card.js  card de atividade com fallback de imagem
     activity-media.js imagem da atividade (cartão e detalhes): informativa, decorativa ou fallback
+    activity-icons.js ícones decorativos (local, data, horário) e `data-category` validado para a cor da etiqueta
     region-state.js   estados de uma região: carregando, erro, vazio, sucesso
   contact/
     validation.js     limites (CONTACT_LIMITS) e validateContact, sem DOM
@@ -62,6 +65,7 @@ js/
   pages/            um módulo por página (inicialização e comportamento)
 tests/unit/         testes unitários (Vitest)
 tests/e2e/          testes de navegador (Playwright)
+tests/capture/      captura de telas antes/depois (`npm run capture -- before|after`)
 specs/              especificações e planos das features (Spec Kit)
 docs/               documentação de produto e design do frontend
 ```
@@ -73,6 +77,8 @@ Diferenças em relação à proposta do DOC-09: o repositório é o próprio fro
 - **Tokens:** cores, fontes, espaçamentos, raios, sombras, foco e duração de transição só existem em `css/tokens.css`; os demais CSS usam `var(--nome)`. Um teste (`tests/unit/design-tokens.test.js`) falha se aparecer cor, fonte ou duração literal fora dele.
 - **Contraste:** os pares texto/fundo estão no teste e em `specs/004-visual-identity-responsive/contracts/design-tokens.md`, com os ajustes em relação ao DOC-10 (texto escuro sobre o laranja, `#C2410C` quando o laranja for linha ou texto, amarelo só decorativo).
 - **Pontos de quebra:** `40rem` (cards em 2 colunas), `48rem` (navegação em linha, igual a `site-nav.js`) e `64rem` (3 colunas). `@media` não aceita variáveis; o teste rejeita outros valores.
+- **Marca e cores de categoria:** o logo e o ícone ficam em `images/brand/`; a etiqueta de categoria ganha cor pelo `slug` da API (`data-category`), com a regra em `css/components.css` e os valores em `css/tokens.css` (DOC-10 §3.1).
+- **Revisão visual:** capturas antes/depois em `docs/visual-review/` (`npm run capture -- before|after`, usa a API simulada) e o registro em [`docs/21-registro-de-revisao-visual.md`](docs/21-registro-de-revisao-visual.md).
 - **Botões:** `.button--primary`, `.button--secondary` e `.button--outline`; o "Tentar novamente" usa o primário por seletor.
 - **Movimento:** transições usam `var(--motion-duration)`; `base.css` zera a duração e desliga a rolagem suave sob `prefers-reduced-motion: reduce`. Não declare duração literal em componentes.
 - **Fontes:** ver `fonts/README.md`.

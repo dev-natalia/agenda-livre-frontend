@@ -1,5 +1,6 @@
 import { activityDetailsUrl, formatOccurrence } from "../utils/format.js";
 import { createActivityMedia } from "./activity-media.js";
+import { createCalendarIcon, createLocationIcon, prependIcon, setCategorySlug } from "./activity-icons.js";
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 const NO_DATE_TEXT = "Sem data prevista";
@@ -64,13 +65,13 @@ function createWhen(occurrence) {
   const when = createElement("p", "activity-card__when");
   if (!formatted) {
     when.textContent = NO_DATE_TEXT;
-    return when;
+    return prependIcon(when, createCalendarIcon);
   }
   const time = document.createElement("time");
   time.setAttribute("datetime", formatted.datetime);
   time.textContent = formatted.timeLabel ? `${formatted.dateLabel} · ${formatted.timeLabel}` : formatted.dateLabel;
   when.append(time);
-  return when;
+  return prependIcon(when, createCalendarIcon);
 }
 
 // Os dados vêm da API: sempre textContent/atributos, nunca innerHTML.
@@ -82,7 +83,7 @@ export function createActivityCard(activity, { headingLevel = 3, categoryIcons =
 
   const body = createElement("div", "activity-card__body");
   if (hasText(activity.category?.name)) {
-    body.append(createElement("p", "activity-card__category", activity.category.name));
+    body.append(setCategorySlug(createElement("p", "activity-card__category", activity.category.name), activity.category));
   }
 
   const level = Math.min(6, Math.max(2, Number(headingLevel) || 3));
@@ -94,7 +95,7 @@ export function createActivityCard(activity, { headingLevel = 3, categoryIcons =
   body.append(heading);
 
   const unit = unitLabel(activity.unit);
-  if (unit) body.append(createElement("p", "activity-card__unit", unit));
+  if (unit) body.append(prependIcon(createElement("p", "activity-card__unit", unit), createLocationIcon));
 
   body.append(createWhen(activity.next_occurrence));
   card.append(body);

@@ -33,7 +33,9 @@ test.describe("estrutura", () => {
     await page.goto("/index.html");
     const image = page.locator(".hero__image");
     await expect(image).toHaveAttribute("alt", "");
-    await expect(page.getByRole("img")).toHaveCount(0);
+    // Feature 011: o logo do cabeçalho é a única imagem exposta (nome acessível "Agenda Livre").
+    await expect(page.getByRole("img")).toHaveCount(1);
+    await expect(page.getByRole("img", { name: "Agenda Livre" })).toHaveCount(1);
     expect(await image.getAttribute("width")).not.toBeNull();
     expect(await image.getAttribute("height")).not.toBeNull();
   });

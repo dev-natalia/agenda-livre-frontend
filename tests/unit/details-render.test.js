@@ -181,3 +181,30 @@ describe("renderNotFound", () => {
     expect(host.querySelector("p").textContent.length).toBeGreaterThan(10);
   });
 });
+
+describe("renderDetails — cor por categoria e ícones (feature 011)", () => {
+  it("grava data-category com o slug válido e mantém o nome escrito", () => {
+    render(full({ category: { name: "Esporte", slug: "esporte-e-atividade-fisica" } }));
+    const tag = host.querySelector(".activity-details__category");
+    expect(tag.getAttribute("data-category")).toBe("esporte-e-atividade-fisica");
+    expect(tag.textContent).toBe("Esporte");
+  });
+
+  it.each(["Esporte", 'a"b', "<img src=x>", "a b", ""])("não grava data-category para o slug %j", (slug) => {
+    render(full({ category: { name: "Qualquer", slug } }));
+    const tag = host.querySelector(".activity-details__category");
+    expect(tag.hasAttribute("data-category")).toBe(false);
+    expect(tag.textContent).toBe("Qualquer");
+  });
+
+  it("os ícones dos metadados são decorativos e não mudam o texto", () => {
+    render(full());
+    const icons = [...host.querySelectorAll("svg.meta-icon")];
+    expect(icons.length).toBeGreaterThan(0);
+    for (const icon of icons) {
+      expect(icon.getAttribute("aria-hidden")).toBe("true");
+      expect(icon.getAttribute("focusable")).toBe("false");
+    }
+    expect(host.querySelector(".activity-details__unit").textContent).toBe("CEU Navegantes");
+  });
+});

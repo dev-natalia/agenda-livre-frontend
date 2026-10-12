@@ -1,6 +1,13 @@
 import { ApiError } from "../api/errors.js";
 import { defaultIcon } from "../components/activity-card.js";
 import { createActivityMedia } from "../components/activity-media.js";
+import {
+  createCalendarIcon,
+  createClockIcon,
+  createLocationIcon,
+  prependIcon,
+  setCategorySlug,
+} from "../components/activity-icons.js";
 import { safeExternalUrl } from "./external-link.js";
 import { scheduleViews } from "./schedule-model.js";
 
@@ -37,12 +44,12 @@ function media(image) {
 
 function header(data) {
   const box = el("header", "activity-details__header");
-  if (hasText(data.category?.name)) box.append(el("p", "activity-details__category", data.category.name));
+  if (hasText(data.category?.name)) box.append(setCategorySlug(el("p", "activity-details__category", data.category.name), data.category));
   const title = el("h1", "activity-details__title", data.title.trim());
   title.tabIndex = -1;
   box.append(title);
   if (hasText(data.summary)) box.append(el("p", "activity-details__summary", data.summary.trim()));
-  if (hasText(data.unit?.name)) box.append(el("p", "activity-details__unit", data.unit.name.trim()));
+  if (hasText(data.unit?.name)) box.append(prependIcon(el("p", "activity-details__unit", data.unit.name.trim()), createLocationIcon));
   return box;
 }
 
@@ -54,9 +61,9 @@ function whenSection(data) {
     const list = el("ul", "activity-details__schedules");
     for (const item of items) {
       const li = el("li", "activity-details__schedule");
-      li.append(el("p", "activity-details__period", item.periodLabel));
+      li.append(prependIcon(el("p", "activity-details__period", item.periodLabel), createCalendarIcon));
       if (item.weekdaysLabel) li.append(el("p", "activity-details__weekdays", item.weekdaysLabel));
-      if (item.timeLabel) li.append(el("p", "activity-details__time", item.timeLabel));
+      if (item.timeLabel) li.append(prependIcon(el("p", "activity-details__time", item.timeLabel), createClockIcon));
       list.append(li);
     }
     children.push(list);
@@ -103,7 +110,10 @@ function descriptionSection(data) {
 function placeSection(data) {
   const lines = [data.unit?.address, data.unit?.neighborhood].filter(hasText).map((line) => line.trim());
   if (!lines.length) return null;
-  const children = lines.map((line) => el("p", "activity-details__place", line));
+  const children = lines.map((line, index) => {
+    const paragraph = el("p", "activity-details__place", line);
+    return index === 0 ? prependIcon(paragraph, createLocationIcon) : paragraph;
+  });
   return section("Local", ...children);
 }
 
