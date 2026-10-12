@@ -28,6 +28,8 @@ A página Explorar guarda termo, filtros e página no endereço (`q`, `unit`, `c
 
 A página de detalhes abre por `atividade.html?id=<uuid>` (o mesmo endereço dos cards; contrato em `specs/007-activity-details/contracts/details-url.md`) e consulta `GET /activities/{id}/`. Mostra categoria, título, unidade, programações (pontuais e recorrentes), próximas datas, público, descrição e local, omitindo o que a API não informar. A API responde o mesmo `404` para atividade inexistente, malformada, cancelada ou encerrada, então todos esses casos (e `id` ausente ou inválido, que nem chega à API) mostram um único estado "Atividade não encontrada ou não disponível"; falhas de comunicação mostram erro com "Tentar novamente". O link de inscrição ou informações só aparece para URLs `http`/`https`, abre em nova aba com `rel="noopener noreferrer"` e indica no texto que é um site externo. "Voltar para atividades" usa o histórico quando a pessoa veio da Explorar (restaurando filtros, página e rolagem) e leva à Explorar sem critérios nos demais casos.
 
+Sobre e Contato existem só no frontend: o backend não tem endpoint para elas (DOC-05 §3.3), então as duas páginas não consultam a API nem mostram o aviso de configuração. O formulário de Contato é demonstrativo: valida Nome (2 a 100 caracteres), E-mail (formato válido, até 254), Assunto (3 a 100) e Mensagem (10 a 1000) pelos limites de `js/contact/validation.js`, mostra todos os erros de uma vez com foco no primeiro campo inválido e, se tudo estiver válido, troca o formulário por um painel que diz que nenhuma mensagem foi enviada. Não há `fetch`, `action`, nem armazenamento: nada digitado sai da página (`specs/008-institutional-pages/contracts/`). O botão de envio nasce desabilitado no HTML e só o script o habilita, para que, sem JavaScript, o navegador não envie os dados pela URL.
+
 Cada página abre diretamente pela própria URL. Os links usam caminhos relativos para funcionar também em subcaminhos.
 
 ## Organização dos arquivos
@@ -51,6 +53,9 @@ js/
     site-nav.js       menu móvel (botão de divulgação) do cabeçalho
     activity-card.js  card de atividade com fallback de imagem
     region-state.js   estados de uma região: carregando, erro, vazio, sucesso
+  contact/
+    validation.js     limites (CONTACT_LIMITS) e validateContact, sem DOM
+    form.js           formulário demonstrativo: erros, foco, painel de confirmação
   utils/
     format.js         data/horário em pt-BR e endereço de detalhes
   pages/            um módulo por página (inicialização e comportamento)

@@ -351,3 +351,21 @@ body > footer {
 .activity-details__actions {
   margin: 0;
 }
+
+/* Páginas institucionais (Sobre) e de contato: coluna de leitura. */
+.prose {
+  max-width: var(--reading-max-width);
+}
+
+.prose section + section {
+  margin-top: var(--space-5);
+}
+
+.prose h2 {
+  margin-top: 0;
+}
+
+.contact {
+  max-width: 40rem;
+  margin-inline: auto;
+}

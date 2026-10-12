@@ -420,3 +420,67 @@ a.pagination__link:hover {
   flex-wrap: wrap;
   gap: var(--space-3);
 }
+
+/* Formulário de contato demonstrativo. */
+.form-field {
+  margin-bottom: var(--space-4);
+}
+
+.form-hint {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+}
+
+.form-field .field-error {
+  margin-top: var(--space-1);
+}
+
+.form-summary {
+  margin: 0 0 var(--space-3);
+  font-weight: 600;
+}
+
+.form-summary:empty {
+  display: none;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.confirmation {
+  padding: var(--space-4);
+  border: var(--border-width-control) solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.confirmation[hidden] {
+  display: none;
+}
+
+.confirmation h2 {
+  margin-top: 0;
+}
+
+.demo-notice {
+  padding: var(--space-3);
+  border: var(--border-width-control) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-notice-background);
+  color: var(--color-notice-text);
+}
+
+.confirmation .button,
+.form-actions .button {
+  max-width: 100%;
+  white-space: normal;
+}
