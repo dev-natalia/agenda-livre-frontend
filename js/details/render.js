@@ -1,5 +1,6 @@
 import { ApiError } from "../api/errors.js";
 import { defaultIcon } from "../components/activity-card.js";
+import { createActivityMedia } from "../components/activity-media.js";
 import { safeExternalUrl } from "./external-link.js";
 import { scheduleViews } from "./schedule-model.js";
 
@@ -20,7 +21,7 @@ function section(title, ...children) {
   return node;
 }
 
-function media() {
+function fallbackMedia() {
   const box = el("div", "activity-details__media image-fallback");
   box.setAttribute("aria-hidden", "true");
   const icon = defaultIcon();
@@ -28,6 +29,10 @@ function media() {
   icon.setAttribute("focusable", "false");
   box.append(icon);
   return box;
+}
+
+function media(image) {
+  return createActivityMedia(image, { className: "activity-details__media", createFallback: fallbackMedia });
 }
 
 function header(data) {
@@ -121,7 +126,7 @@ export function renderDetails(data) {
     throw new ApiError("invalid_response");
   }
   const article = el("article", "activity-details__article");
-  article.append(media(), header(data), whenSection(data));
+  article.append(media(data.image), header(data), whenSection(data));
   for (const part of [audienceSection(data), descriptionSection(data), placeSection(data), externalLink(data)]) {
     if (part) article.append(part);
   }

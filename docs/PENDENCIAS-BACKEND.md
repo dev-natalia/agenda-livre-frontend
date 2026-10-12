@@ -13,10 +13,11 @@ Divergências entre o contrato documentado no backend (`agenda-livre-backend/spe
   - Impacto no frontend: o cliente classifica como `bad_request` (sem "Tentar novamente"), e não como `not_found`. A paginação (FE-024) precisa tratar esse caso, por exemplo voltando à página 1.
   - Tratado na Explorar (feature 006): `400` com erro em `page`, ou `404`, em página maior que 1 volta à página 1 dos mesmos critérios. Funciona qualquer que seja a decisão do backend. Se o `400` for o comportamento desejado, basta atualizar o contrato; se o `404` ou o fallback para a página padrão for o desejado, corrigir o backend.
 
-- [ ] **Atividades não têm imagem no backend.**
+- [x] **Atividades não têm imagem no backend.** Resolvida em 2026-10-12 (feature 010 do backend, imagens).
   - Contrato: nenhum campo de imagem em `GET /activities/` nem em `GET /activities/{id}/`. O backend exclui imagens de propósito (`agenda-livre-backend/specs/004-activity-management/spec.md`: "imagens não fazem parte desta versão"), mas o DOC-12/DOC-13 do frontend preveem imagem no card e na página de detalhes.
   - Impacto no frontend: todo card e a página de detalhes usam o fallback visual (FE-009) como caso normal. O componente do card fica preparado para receber uma imagem, mas nada a exibe hoje (feature 003).
   - Decisão pendente: (a) o backend passa a oferecer imagem (campo de URL, mais texto alternativo ou marcação de imagem decorativa, nos dois endpoints); ou (b) o produto aceita a versão 1 sem imagens, e os DOC-12/DOC-13 passam a tratar o fallback como padrão.
+  - Verificado em 2026-10-12 com `npm run test:contract` contra a API em execução: `GET /activities/` e `GET /activities/{id}/` trazem `image` como `{ url, alt, decorative }` (`url` absoluta em `https`) ou `null`. O frontend trata o campo no cartão e nos detalhes (`js/components/activity-media.js`, feature 010 do frontend). Observação: numa primeira tentativa, no mesmo dia, `GET /activities/` respondeu `500` enquanto a feature estava sendo aplicada no backend; na tentativa seguinte voltou a responder normalmente.
 
 ## Resolvidas
 

@@ -52,6 +52,7 @@ js/
     error-state.js    erro acessível com "Tentar novamente"
     site-nav.js       menu móvel (botão de divulgação) do cabeçalho
     activity-card.js  card de atividade com fallback de imagem
+    activity-media.js imagem da atividade (cartão e detalhes): informativa, decorativa ou fallback
     region-state.js   estados de uma região: carregando, erro, vazio, sucesso
   contact/
     validation.js     limites (CONTACT_LIMITS) e validateContact, sem DOM
@@ -156,7 +157,7 @@ async function load() {
 }
 ```
 
-- `createActivityCard(activity, { headingLevel, categoryIcons })` devolve um `<article>` com um único link para `atividade.html?id=<id>`, ou `null` sem `id`/`title`. A API não envia imagem, então a área de imagem mostra o fallback decorativo; se `activity.image = { url, alt }` existir, a imagem é usada (e volta ao fallback se falhar).
+- `createActivityCard(activity, { headingLevel, categoryIcons })` devolve um `<article>` com um único link para `atividade.html?id=<id>`, ou `null` sem `id`/`title`. A área de imagem usa o campo `image` da API (`{ url, alt, decorative }` ou `null`; `js/components/activity-media.js`, o mesmo módulo dos detalhes): imagem informativa com o `alt` da API; `decorative: true` com `alt=""` e contêiner oculto da tecnologia assistiva; `null`, campo ausente, endereço que não seja `http(s)` ou imagem que falha ao carregar mostram o fallback decorativo (formato em `specs/010-testing-quality/contracts/api-image-contract.md`).
 - `createRegionState` mantém `content` fora de qualquer região `live` e anuncia uma mensagem por troca em `status`. O anúncio de "carregando" só sai após 300 ms. Nenhuma troca move o foco.
 - `renderErrorState(container, error, { onRetry, live })`: com `live: false` o contêiner não vira região de status (é o que `createRegionState` usa).
 
@@ -164,14 +165,14 @@ async function load() {
 
 ```sh
 npm install
-npm test
+npx playwright install chromium   # só na primeira vez
+npm test                          # unitários (Vitest), cerca de 6 s
+npm run test:all                  # unitários e depois navegador (Playwright), cerca de 4 min
 ```
 
-Os testes unitários usam Vitest e ficam em `tests/unit/`.
+Pré-requisitos, todos os comandos, como rodar uma parte, como ler falhas, as fixtures de teste, a verificação opcional contra a API real e a integração contínua estão em [`docs/19-guia-de-testes.md`](docs/19-guia-de-testes.md). Os resultados de cada execução ficam em [`docs/20-registro-de-qualidade.md`](docs/20-registro-de-qualidade.md), e os de acessibilidade (matriz axe-core, teclado, contraste, o que ainda é manual) em [`docs/17-registro-de-acessibilidade.md`](docs/17-registro-de-acessibilidade.md). Passar nas verificações automáticas não prova conformidade com a WCAG 2.2 AA.
 
-Os testes de navegador usam Playwright (`tests/e2e/`) e sobem o servidor local sozinhos. Na primeira vez: `npx playwright install chromium`. Depois: `npm run test:e2e`. A suíte usa 2 workers de propósito e sobe `tests/static-server.py` (um `http.server` com fila de conexões maior, que evita `ERR_CONNECTION_REFUSED` intermitente). Se já houver um servidor na porta 5500 (por exemplo, `python -m http.server 5500`), o Playwright o reaproveita e a recusa de conexões pode voltar: encerre-o antes de rodar os testes. `tests/e2e/accessibility.spec.js` roda axe-core nas cinco páginas e nos estados dos componentes; ele não substitui a revisão manual com teclado e leitor de tela.
-
-A acessibilidade transversal (feature 009) tem uma matriz de verificação: `npx playwright test a11y` roda axe-core em 36 cenários (cinco páginas × estados × larguras de 1280 e 320 px), teclado e ordem de foco, foco visível, nomes e imagens, estados dinâmicos, contraste por estado, espaçamento de texto e movimento reduzido; `npm test` inclui as regras de CSS, a estrutura das páginas e a conferência do registro. Os resultados, os problemas encontrados, as limitações e o que ainda não foi verificado à mão estão em `docs/17-registro-de-acessibilidade.md`. Passar nas verificações automáticas não prova conformidade com a WCAG 2.2 AA.
+Atenção: a porta 5500 precisa estar livre; se já houver um servidor nela, encerre-o antes de rodar os testes de navegador.
 
 ## Como adicionar...
 
