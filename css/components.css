@@ -14,7 +14,7 @@
   background: var(--color-action);
   color: var(--color-brand-contrast);
   font: inherit;
-  font-weight: 600;
+  font-weight: 700;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
@@ -99,10 +99,10 @@
 .region-state__empty {
   max-width: none;
   margin: 0 0 var(--space-3);
-  padding: var(--space-5) var(--space-4);
+  padding: var(--space-6) var(--space-4);
   border: var(--border-width-control) solid var(--color-empty-border);
   border-radius: var(--radius-panel);
-  background: var(--color-surface);
+  background: var(--color-surface-tint);
   text-align: center;
 }
 
@@ -117,8 +117,8 @@
 .region-state__title {
   display: block;
   font-family: var(--font-heading);
-  font-size: var(--font-size-card-title);
-  font-weight: 600;
+  font-size: 1.375rem;
+  font-weight: 700;
 }
 
 .region-state__hint {
@@ -230,15 +230,21 @@ textarea:disabled {
   flex-direction: column;
   min-width: 0;
   overflow: hidden;
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-card);
+  border: var(--border-width) solid var(--color-line);
+  border-radius: var(--radius-panel);
   background: var(--color-surface);
-  box-shadow: var(--shadow-card);
   transition: border-color var(--motion-duration) var(--motion-ease);
 }
 
 .activity-card:hover {
   border-color: var(--color-primary);
+}
+
+.activity-card:hover .activity-card__title a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
 }
 
 .activity-card:focus-within {
@@ -272,7 +278,7 @@ textarea:disabled {
   flex: 1 1 auto;
   flex-direction: column;
   gap: var(--space-2);
-  padding: var(--space-3);
+  padding: var(--space-3) var(--space-4) var(--space-4);
   overflow-wrap: anywhere;
 }
 
@@ -347,6 +353,17 @@ textarea:disabled {
   line-height: var(--line-height-heading);
 }
 
+.activity-card__title a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+/* A etiqueta é um adesivo preso na borda da imagem: metade sobre a imagem, metade sobre o texto. */
+.activity-card__category {
+  margin-top: calc(-1 * (var(--space-3) + 1rem));
+  box-shadow: 0 0 0 3px var(--color-surface);
+}
+
 /* Link esticado: o card inteiro é clicável, com uma única parada de foco. */
 .activity-card__title a::after {
   content: "";
@@ -368,6 +385,9 @@ textarea:disabled {
 /* A data fica na base do card: cards da mesma linha alinham a última linha. */
 .activity-card__when {
   margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: var(--border-width) solid var(--color-line);
+  font-weight: 600;
 }
 
 /* Linha de metadado: ícone decorativo à esquerda, texto à direita. */

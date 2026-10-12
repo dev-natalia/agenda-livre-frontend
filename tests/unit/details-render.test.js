@@ -55,7 +55,8 @@ describe("renderDetails — conteúdo completo", () => {
 
   it("mostra programações, próximas datas com <time>, público e descrição em seções h2", () => {
     render(full());
-    expect(sectionTitles()).toEqual(["Quando", "Público", "Sobre a atividade", "Local"]);
+    // Refinamento visual: informações práticas (Quando, Público, Local) agrupadas antes da descrição longa.
+    expect(sectionTitles()).toEqual(["Quando", "Público", "Local", "Sobre a atividade"]);
     expect(host.textContent).toContain("Terça-feira e Quinta-feira");
     expect(host.textContent).toContain("14h00 às 15h00");
     expect(host.querySelector("time[datetime='2026-11-03T14:00']")).not.toBeNull();
