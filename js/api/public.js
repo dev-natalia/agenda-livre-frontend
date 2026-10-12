@@ -34,3 +34,8 @@ export function fetchActivities({ criteria, page = 1, scope, fetchImpl } = {}) {
   if (page > 1) params.page = page;
   return get("/activities/", { scope, fetchImpl, params });
 }
+
+// Detalhe de uma atividade pública; o `404` é uniforme (inexistente, malformado ou não publicada).
+export function fetchActivityDetails(id, { scope, fetchImpl } = {}) {
+  return get(`/activities/${encodeURIComponent(id)}/`, { scope, fetchImpl });
+}

@@ -394,3 +394,29 @@ a.pagination__link:hover {
 .results .card-grid > .error-state__retry {
   justify-self: start;
 }
+
+/* Detalhes da atividade: esqueleto de texto, link externo e estado "não encontrada". */
+.skeleton-card--text {
+  aspect-ratio: auto;
+  min-height: var(--space-7);
+  margin-bottom: var(--space-3);
+}
+
+.external-link {
+  max-width: 100%;
+  white-space: normal;
+}
+
+.not-found {
+  max-width: 40rem;
+}
+
+.not-found__title {
+  margin-top: 0;
+}
+
+.not-found__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
