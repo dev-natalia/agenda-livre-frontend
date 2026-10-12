@@ -7,6 +7,9 @@ const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 const pages = ["index.html", "explorar.html", "atividade.html", "sobre.html", "contato.html"];
 
 async function scan(page) {
+  // Aguarda o fim das transições de cor (150 ms): o axe lê cores intermediárias, por exemplo
+  // no botão de envio de contato, habilitado pelo script depois do carregamento.
+  await page.waitForTimeout(300);
   const { violations } = await new AxeBuilder({ page }).withTags(TAGS).analyze();
   return violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(" | ")}`);
 }

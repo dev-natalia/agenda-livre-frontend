@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const pages = ["index.html", "explorar.html", "atividade.html", "sobre.html", "contato.html"];
+const STATIC_PAGES = ["sobre.html", "contato.html"];
 
 async function overrideConfig(page, apiBaseUrl) {
   // Reaproveita o config.js real, trocando apenas o valor público.
@@ -68,13 +69,19 @@ for (const [label, value, text] of [
     });
     const problems = collectProblems(page);
     await overrideConfig(page, value);
-    for (const path of pages) {
+    for (const path of pages.filter((p) => !STATIC_PAGES.includes(p))) {
       await page.goto(`/${path}`);
       const alert = page.locator("main > [role=alert]").first();
       await expect(alert).toBeVisible();
       await expect(alert).toHaveText(text);
       await expect(alert).not.toContainText(/TypeError|Invalid URL|undefined/);
       await expect(page.locator("main h1")).toBeVisible();
+    }
+    // Sobre e Contato não usam a API: não mostram o aviso de configuração.
+    for (const path of STATIC_PAGES) {
+      await page.goto(`/${path}`);
+      await expect(page.locator("main h1")).toBeVisible();
+      await expect(page.locator("[role=alert]")).toHaveCount(0);
     }
     expect(apiRequests).toEqual([]);
     expect(problems).toEqual([]);

@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+
 // Monta em jsdom o trecho de index.html usado pela página inicial (mesmos ids e atributos).
 export function mountHomeDom() {
   document.body.innerHTML = `
@@ -100,4 +102,23 @@ export function mountDetailsDom() {
     </main>`;
   const $ = (id) => document.getElementById(id);
   return { back: $("details-back"), status: $("details-status"), content: $("details-content") };
+}
+
+// Monta em jsdom o <main> real de contato.html (mesmos ids e atributos, sem cópia que possa divergir).
+export function mountContactDom() {
+  const html = readFileSync("contato.html", "utf-8");
+  const main = /<main[\s\S]*?<\/main>/.exec(html);
+  document.body.innerHTML = main ? main[0] : "";
+  const $ = (id) => document.getElementById(id);
+  return {
+    form: $("contact-form"),
+    name: $("contact-name"),
+    email: $("contact-email"),
+    subject: $("contact-subject"),
+    message: $("contact-message"),
+    summary: $("contact-summary"),
+    clear: $("contact-clear"),
+    confirmation: $("contact-confirmation"),
+    back: $("contact-back"),
+  };
 }
