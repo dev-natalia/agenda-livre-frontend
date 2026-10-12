@@ -41,3 +41,39 @@ export function contrast(a, b) {
   const [x, y] = [luminance(a), luminance(b)].sort((m, n) => n - m);
   return (x + 0.05) / (y + 0.05);
 }
+
+// Regras do CSS como { selector, declarations, media }, sem comentários. `@media` e `@supports`
+// aninhados são expandidos, com a condição em `media` (null fora de condição); `@font-face` e
+// `@keyframes` são ignorados. Seletores separados por vírgula ficam juntos em `selector`.
+export function ruleBlocks(css) {
+  const source = stripComments(css);
+  const rules = [];
+
+  function parse(text, media) {
+    let i = 0;
+    while (i < text.length) {
+      const open = text.indexOf("{", i);
+      if (open === -1) break;
+      const head = text.slice(i, open).trim();
+      let depth = 1;
+      let j = open + 1;
+      while (j < text.length && depth > 0) {
+        if (text[j] === "{") depth += 1;
+        else if (text[j] === "}") depth -= 1;
+        j += 1;
+      }
+      const body = text.slice(open + 1, j - 1);
+      if (/^@(media|supports)/.test(head)) {
+        parse(body, head.replace(/^@(media|supports)\s*/, "").trim());
+      } else if (!head.startsWith("@")) {
+        const declarations = {};
+        for (const m of body.matchAll(/([\w-]+)\s*:\s*([^;]+);?/g)) declarations[m[1]] = m[2].trim();
+        rules.push({ selector: head.replace(/\s+/g, " "), declarations, media });
+      }
+      i = j;
+    }
+  }
+
+  parse(source, null);
+  return rules;
+}

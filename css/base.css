@@ -59,6 +59,8 @@ body {
   line-height: var(--line-height-base);
   color: var(--color-text);
   background: var(--color-background);
+  /* Última defesa contra rolagem horizontal: palavra mais larga que a caixa quebra (WCAG 1.4.10 e 1.4.12). */
+  overflow-wrap: anywhere;
 }
 
 h1,

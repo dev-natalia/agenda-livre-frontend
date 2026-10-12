@@ -171,6 +171,8 @@ Os testes unitários usam Vitest e ficam em `tests/unit/`.
 
 Os testes de navegador usam Playwright (`tests/e2e/`) e sobem o servidor local sozinhos. Na primeira vez: `npx playwright install chromium`. Depois: `npm run test:e2e`. A suíte usa 2 workers de propósito e sobe `tests/static-server.py` (um `http.server` com fila de conexões maior, que evita `ERR_CONNECTION_REFUSED` intermitente). Se já houver um servidor na porta 5500 (por exemplo, `python -m http.server 5500`), o Playwright o reaproveita e a recusa de conexões pode voltar: encerre-o antes de rodar os testes. `tests/e2e/accessibility.spec.js` roda axe-core nas cinco páginas e nos estados dos componentes; ele não substitui a revisão manual com teclado e leitor de tela.
 
+A acessibilidade transversal (feature 009) tem uma matriz de verificação: `npx playwright test a11y` roda axe-core em 36 cenários (cinco páginas × estados × larguras de 1280 e 320 px), teclado e ordem de foco, foco visível, nomes e imagens, estados dinâmicos, contraste por estado, espaçamento de texto e movimento reduzido; `npm test` inclui as regras de CSS, a estrutura das páginas e a conferência do registro. Os resultados, os problemas encontrados, as limitações e o que ainda não foi verificado à mão estão em `docs/17-registro-de-acessibilidade.md`. Passar nas verificações automáticas não prova conformidade com a WCAG 2.2 AA.
+
 ## Como adicionar...
 
 - **Uma página:** crie o `.html` na raiz (com `lang="pt-BR"`, `<title>` próprio e os três CSS), crie `js/pages/<nome>.js` e inclua-o com `<script type="module">`.
