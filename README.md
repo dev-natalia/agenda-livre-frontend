@@ -65,7 +65,7 @@ js/
   pages/            um módulo por página (inicialização e comportamento)
 tests/unit/         testes unitários (Vitest)
 tests/e2e/          testes de navegador (Playwright)
-tests/capture/      captura de telas antes/depois (`npm run capture -- before|after`)
+tests/capture/      captura de telas antes/depois (`npm run capture -- before|after|redesign`)
 specs/              especificações e planos das features (Spec Kit)
 docs/               documentação de produto e design do frontend
 ```

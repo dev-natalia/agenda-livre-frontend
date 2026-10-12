@@ -1,7 +1,7 @@
 # DOC-21 — Registro de Revisão Visual
 
 **Projeto:** Agenda Livre  
-**Status:** Registro da feature 011 — refinamento visual do frontend  
+**Status:** Registro da feature 011 — refinamento visual do frontend; a seção 12 acrescenta o redesenho visual da branch `012-visual-redesign`  
 **Referências:** `docs/18-backlog-refinamento-visual-frontend.md` (VIS-001 a VIS-024), `specs/011-visual-refinement/spec.md`, `specs/011-visual-refinement/contracts/visual-review-record.md`, `docs/Guia de Marca Agenda Livre.png`
 
 Este registro documenta o que foi executado e observado na data indicada. Passar nas verificações automáticas não prova conformidade com a WCAG 2.2 AA nem a ausência de defeitos. As verificações manuais que dependem de uma pessoa (teclado, ampliação, leitor de tela) estão separadas das automáticas na seção 7.
@@ -138,3 +138,47 @@ Capturas geradas por `npm run capture -- before` (antes de qualquer mudança) e 
 - A verificação manual por teclado e de ampliação não foi feita (seção 7).
 - As capturas usam respostas simuladas, nas larguras 320, 375 (Início e Explorar), 768, 1024 (Início e Explorar) e 1440; testes não comparam pixels.
 - O logo e o ícone são uma recriação do guia, não os arquivos originais de um designer; se houver arquivos oficiais, devem substituí-los em `images/brand/`.
+
+## 12. Redesenho visual (branch `012-visual-redesign`)
+
+Segundo passe de design sobre o resultado da feature 011, mantendo marca, paleta e fontes do guia. As seções 1 a 11 acima continuam descrevendo a 011 e não foram alteradas. As capturas `docs/visual-review/after/` são o estado da 011 e servem de "antes" aqui; as novas ficam em `docs/visual-review/redesign/` (`npm run capture -- redesign`, 37 arquivos, mesmos estados e larguras).
+
+**Resultados (data: 2026-10-12, mesmo ambiente da seção 2):**
+
+| Suíte | Comando | Aprovados | Falhos | Ignorados |
+|---|---|---|---|---|
+| Unitária | `npm test` | 1105 (50 arquivos) | 0 | 0 |
+| Navegador | `npm run test:e2e` | 702 | 0 | 20 |
+| Só acessibilidade | `npm run test:a11y` | 337 | 0 | 20 |
+
+**O que mudou:**
+
+- Início: hero em painel azul da marca com ilustração nova (`images/hero-rays.svg`), título maior e busca sobreposta à base do hero. Entre 48rem e 64rem a busca usa duas colunas.
+- Cards planos, sem sombra; etiqueta de categoria presa à borda da imagem; data separada por filete.
+- Cabeçalho mais leve (links sem sublinhado, exceto a página atual); filtros do Explorar em faixa azul-clara; seções de Sobre separadas por filetes.
+- Detalhes em duas colunas a partir de 64rem, com Quando, Público e Local num bloco próprio.
+
+**Testes atualizados:** `tests/unit/details-render.test.js` e `tests/e2e/details-content.spec.js` esperam agora a ordem Quando, Público, Local, Sobre a atividade, porque `js/details/render.js` agrupa as informações práticas num contêiner (dependência de estrutura registrada conforme FR-031). Nenhum teste foi removido nem enfraquecido.
+
+**Comparação (feature 011 e redesenho):**
+
+| Página | Estado | Feature 011 | Redesenho |
+|---|---|---|---|
+| Início | resultados, 1440 | `docs/visual-review/after/inicio-resultados-1440.png` | `docs/visual-review/redesign/inicio-resultados-1440.png` |
+| Início | resultados, 768 | `docs/visual-review/after/inicio-resultados-768.png` | `docs/visual-review/redesign/inicio-resultados-768.png` |
+| Início | resultados, 375 | `docs/visual-review/after/inicio-resultados-375.png` | `docs/visual-review/redesign/inicio-resultados-375.png` |
+| Início | erro, 768 | `docs/visual-review/after/inicio-erro-768.png` | `docs/visual-review/redesign/inicio-erro-768.png` |
+| Explorar | resultados, 1440 | `docs/visual-review/after/explorar-resultados-1440.png` | `docs/visual-review/redesign/explorar-resultados-1440.png` |
+| Explorar | vazio, 320 | `docs/visual-review/after/explorar-vazio-320.png` | `docs/visual-review/redesign/explorar-vazio-320.png` |
+| Detalhes | resultados, 1440 | `docs/visual-review/after/detalhes-resultados-1440.png` | `docs/visual-review/redesign/detalhes-resultados-1440.png` |
+| Detalhes | resultados, 320 | `docs/visual-review/after/detalhes-resultados-320.png` | `docs/visual-review/redesign/detalhes-resultados-320.png` |
+| Sobre | 1440 | `docs/visual-review/after/sobre-resultados-1440.png` | `docs/visual-review/redesign/sobre-resultados-1440.png` |
+| Contato | 1440 | `docs/visual-review/after/contato-resultados-1440.png` | `docs/visual-review/redesign/contato-resultados-1440.png` |
+
+**Problema encontrado na revisão das capturas:**
+
+- **VR-004 — Seletor "Categoria" cortava o texto em 768 px.** Com três seletores lado a lado em 48rem, "Todas as categorias" aparecia como "Todas as categoria". Corrigido: duas colunas nessa faixa (`css/layout.css`); capturas refeitas e conferidas em 768 e 1024.
+
+**Observado nas capturas:** Início (1440, 1024, 768, 375, erro em 768), Explorar (1440, vazio em 320), Detalhes (1440 e 320), Sobre e Contato (1440). **Não observadas a olho:** as demais capturas do conjunto (por exemplo Sobre e Contato em 320 e 768, e os estados vazio e erro de Início e Explorar em outras larguras); nelas só há a verificação automática.
+
+**Limites:** valem os da seção 11. A verificação manual por teclado, leitor de tela, ampliação e alto contraste continua pendente; nenhuma conformidade integral com a WCAG 2.2 AA é declarada. A animação dos raios do hero só foi verificada pela regra de movimento reduzido nos testes, não a olho.

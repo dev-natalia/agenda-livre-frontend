@@ -1,5 +1,5 @@
 // Captura de telas para a revisão visual (feature 011, contracts/visual-review-record.md).
-// Uso: npm run capture -- before|after   (grava em docs/visual-review/<before|after>/)
+// Uso: npm run capture -- before|after|redesign   (grava em docs/visual-review/<before|after>/)
 // Usa a API simulada das fixtures, sem rede externa. Não faz parte de `npm test`.
 import { spawn } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -13,8 +13,8 @@ const PORT = 5500;
 const BASE = `http://localhost:${PORT}`;
 const mode = process.argv[2];
 
-if (mode !== "before" && mode !== "after") {
-  console.error("Uso: npm run capture -- before|after");
+if (!["before", "after", "redesign"].includes(mode)) {
+  console.error("Uso: npm run capture -- before|after|redesign");
   process.exit(1);
 }
 
