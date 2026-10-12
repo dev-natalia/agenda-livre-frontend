@@ -1,0 +1,43 @@
+name: Testes
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  suite:
+    name: Suíte completa (unitária e navegador)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 20
+          cache: npm
+
+      # O servidor estático dos testes de navegador (tests/static-server.py) usa `python`.
+      - uses: actions/setup-python@v5.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Instalar o Chromium do Playwright
+        run: npx playwright install --with-deps chromium
+
+      # A verificação de contrato com a API real não roda aqui: o backend não está disponível.
+      - name: Rodar a suíte completa
+        run: npm run test:all
+
+      - name: Publicar relatório e artefatos da falha
+        if: failure()
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: relatorio-de-testes
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore

@@ -1,91 +1,9 @@
+// As fixtures vivem em tests/fixtures/activities.js; são reexportadas aqui para os testes de navegador.
+import { makeActivity, UNITS, CATEGORIES } from "../../fixtures/activities.js";
+export * from "../../fixtures/activities.js";
+
 const API = "**/api/v1";
 const CORS = { "access-control-allow-origin": "*" };
-
-export function makeActivity(n, overrides = {}) {
-  return {
-    id: `550e8400-e29b-41d4-a716-44665544${String(n).padStart(4, "0")}`,
-    title: `Atividade de teste ${n}`,
-    slug: `atividade-de-teste-${n}`,
-    summary: "Resumo.",
-    unit: { id: "u1", name: "CEU Navegantes", slug: "ceu-navegantes", neighborhood: "Grajaú" },
-    category: { id: "c1", name: "Cultura e Artes", slug: "cultura-e-artes" },
-    next_occurrence: { date: "2026-11-20", start_time: "14:00", end_time: "15:00" },
-    ...overrides,
-  };
-}
-
-export const UNITS = [
-  { id: "11111111-1111-4111-8111-111111111111", name: "CEU Navegantes", slug: "ceu-navegantes" },
-  { id: "22222222-2222-4222-8222-222222222222", name: "CEU Parelheiros", slug: "ceu-parelheiros" },
-];
-export const CATEGORIES = [
-  { id: "33333333-3333-4333-8333-333333333333", name: "Cultura e Artes", slug: "cultura-e-artes" },
-  { id: "44444444-4444-4444-8444-444444444444", name: "Esportes", slug: "esportes" },
-];
-
-// Resposta paginada de `total` atividades, no recorte da página pedida (padrão da API: 12 por página).
-export function makeListing(total, { page = 1, pageSize = 12, base = "http://localhost:8000/api/v1/activities/" } = {}) {
-  const start = (page - 1) * pageSize;
-  const results = [];
-  for (let n = start + 1; n <= Math.min(total, start + pageSize); n += 1) results.push(makeActivity(n));
-  return {
-    count: total,
-    next: start + pageSize < total ? `${base}?page=${page + 1}` : null,
-    previous: page > 1 && results.length ? `${base}?page=${page - 1}` : null,
-    results,
-  };
-}
-
-export const DETAILS_ID = "550e8400-e29b-41d4-a716-446655440001";
-
-// Corpo de `GET /activities/{id}/` (contrato do backend, public-api.md).
-export function makeDetails(overrides = {}) {
-  return {
-    id: DETAILS_ID,
-    title: "Oficina de dança",
-    slug: "oficina-de-danca",
-    summary: "Aprenda os primeiros passos.",
-    description: "Descrição completa.\nSegunda linha.",
-    target_audience_notes: "Iniciantes são bem-vindos.",
-    unit: {
-      id: "11111111-1111-4111-8111-111111111111",
-      name: "CEU Navegantes",
-      slug: "ceu-navegantes",
-      address: "Rua das Flores, 100",
-      neighborhood: "Grajaú",
-    },
-    category: { id: "33333333-3333-4333-8333-333333333333", name: "Cultura e Artes", slug: "cultura-e-artes" },
-    target_audiences: [{ id: "a1", name: "Adultos" }],
-    external_registration_url: null,
-    schedules: [
-      {
-        id: "s1",
-        schedule_type: "ONE_TIME",
-        start_date: "2026-11-20",
-        end_date: "2026-11-20",
-        start_time: "10:00",
-        end_time: "11:00",
-        weekdays: [],
-        weekday_names: [],
-      },
-      {
-        id: "s2",
-        schedule_type: "RECURRING",
-        start_date: "2026-11-01",
-        end_date: "2026-12-31",
-        start_time: "14:00",
-        end_time: "15:00",
-        weekdays: [2, 4],
-        weekday_names: ["Terça-feira", "Quinta-feira"],
-      },
-    ],
-    next_occurrences: [
-      { date: "2026-11-03", start_time: "14:00", end_time: "15:00" },
-      { date: "2026-11-05", start_time: "14:00", end_time: "15:00" },
-    ],
-    ...overrides,
-  };
-}
 
 const DETAIL_PATH = /\/activities\/[0-9a-f-]{36}\/?$/i;
 

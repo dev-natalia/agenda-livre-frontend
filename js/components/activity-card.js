@@ -1,4 +1,5 @@
 import { activityDetailsUrl, formatOccurrence } from "../utils/format.js";
+import { createActivityMedia } from "./activity-media.js";
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 const NO_DATE_TEXT = "Sem data prevista";
@@ -46,28 +47,11 @@ function createFallback(activity, categoryIcons) {
   return media;
 }
 
-function isHttpUrl(value) {
-  try {
-    const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch {
-    return false;
-  }
-}
-
 function createMedia(activity, categoryIcons) {
-  const fallback = () => createFallback(activity, categoryIcons);
-  const image = activity.image;
-  if (!image || !isHttpUrl(image.url)) return fallback();
-
-  const media = createElement("div", "activity-card__media");
-  const img = document.createElement("img");
-  img.src = image.url;
-  img.alt = typeof image.alt === "string" ? image.alt : "";
-  img.loading = "lazy";
-  img.addEventListener("error", () => media.replaceWith(fallback()), { once: true });
-  media.append(img);
-  return media;
+  return createActivityMedia(activity.image, {
+    className: "activity-card__media",
+    createFallback: () => createFallback(activity, categoryIcons),
+  });
 }
 
 function unitLabel(unit) {
