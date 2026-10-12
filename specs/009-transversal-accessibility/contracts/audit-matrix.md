@@ -36,3 +36,7 @@ Nenhuma até o momento. Formato obrigatório para cada exceção: **regra**, **s
 - Um critério só é "conforme" quando todas as suas verificações aplicáveis passaram em todas as páginas e estados em que se aplica.
 - "Não verificado" nunca é convertido em "conforme". Aparece no registro com o motivo.
 - Acrescentar uma página ou um estado exige acrescentá-lo a `tests/e2e/helpers/a11y-matrix.js`.
+
+## Como os estados são provocados (T021)
+
+Todos os sete estados do DOC-14 §9.1 são alcançados por interação real, sem injetar DOM: a API é simulada por `tests/e2e/helpers/mock-api.js` (resposta com atividades, lista vazia `count: 0`, erro `500`, detalhe `404`) e o formulário de Contato é enviado vazio e com dados sintéticos. A falha de rede (`network`) também é simulada pelo `mockApi` (`route.abort`). A definição está em `tests/e2e/helpers/a11y-matrix.js`.
