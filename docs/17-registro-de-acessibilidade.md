@@ -26,7 +26,14 @@ _A preencher: critério, página, estado, largura, resultado e evidência._
 
 ## 5. Problemas
 
-_A preencher conforme a auditoria avança. Campos: id, critério, onde, descrição, gravidade, situação, correção ou justificativa._
+### A11Y-001 — Rolagem horizontal com texto a 200% e espaçamento aumentado a 320 px
+
+- **Critérios:** 1.4.10 Reflow e 1.4.12 Espaçamento de texto (AA); FE-040.
+- **Onde:** `sobre.html` (botão "Explorar atividades"), `contato.html` (aviso "Formulário demonstrativo:") e os estados de erro da API, formulário com erros e confirmação, só em largura de 320 px com texto a 200% somado ao espaçamento da WCAG 1.4.12. Sete cenários de `tests/e2e/a11y-text-spacing.spec.js`.
+- **Descrição:** uma palavra mais larga que a caixa (por exemplo, "atividades" em um botão com 200% e letras espaçadas) não quebrava e empurrava a página 10 a 56 px para fora da tela.
+- **Gravidade:** prejudica (exige rolagem horizontal em uma combinação extrema de ajustes).
+- **Situação:** corrigido.
+- **Correção:** `overflow-wrap: anywhere` em `body` (`css/base.css`), como última defesa; antes só os títulos tinham essa regra. Os 30 cenários do modo severo e a suíte completa (618 testes de navegador) passam depois da mudança.
 
 ## 6. Exceções
 
