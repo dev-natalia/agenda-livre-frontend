@@ -78,6 +78,13 @@ describe("buildExploreUrl — filtros", () => {
     });
   });
 
+  it("audience entra entre category e as datas, só quando escolhido", () => {
+    const AUDIENCE = "55555555-5555-4555-8555-555555555551";
+    const url = buildExploreUrl({ unit: UNIT, category: CATEGORY, audience: AUDIENCE, period: "today" }, HOJE);
+    expect([...query(url).keys()]).toEqual(["unit", "category", "audience", "date"]);
+    expect(buildExploreUrl({ audience: "" }, HOJE)).toBe("explorar.html");
+  });
+
   it("hoje usa apenas date; nunca junto de date_from/date_to", () => {
     const params = query(buildExploreUrl({ period: "today" }, HOJE));
     expect(Object.fromEntries(params)).toEqual({ date: HOJE });

@@ -11,6 +11,7 @@ export function makeActivity(n, overrides = {}) {
     unit: { id: "u1", name: "CEU Navegantes", slug: "ceu-navegantes", neighborhood: "Grajaú" },
     category: { id: "c1", name: "Cultura e Artes", slug: "cultura-e-artes" },
     next_occurrence: { date: "2026-11-20", start_time: "14:00", end_time: "15:00" },
+    target_audiences: [{ id: "55555555-5555-4555-8555-555555555551", name: "Adultos" }],
     ...overrides,
   };
 }
@@ -22,6 +23,12 @@ export const UNITS = [
 export const CATEGORIES = [
   { id: "33333333-3333-4333-8333-333333333333", name: "Cultura e Artes", slug: "cultura-e-artes" },
   { id: "44444444-4444-4444-8444-444444444444", name: "Esportes", slug: "esportes" },
+];
+
+export const AUDIENCES = [
+  { id: "55555555-5555-4555-8555-555555555551", name: "Adultos", slug: "adultos", description: null },
+  { id: "55555555-5555-4555-8555-555555555552", name: "Crianças", slug: "criancas", description: null },
+  { id: "55555555-5555-4555-8555-555555555553", name: "Todas as idades", slug: "todas-as-idades", description: null },
 ];
 
 // Resposta paginada de `total` atividades, no recorte da página pedida (padrão da API: 12 por página).

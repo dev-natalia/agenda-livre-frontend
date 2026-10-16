@@ -1,11 +1,11 @@
 import { MAX_TERM_LENGTH, normalizeTerm, periodRange } from "../home/search-criteria.js";
 import { addDays, lastDayOfMonth, todayInSaoPaulo } from "../utils/dates.js";
 
-// Contrato: specs/006-activity-exploration/contracts/explore-url.md. Sem acesso a window/document.
+// Contrato: specs/006-activity-exploration/contracts/explore-url.md e specs/012-audience-filter/contracts/explore-url.md. Sem acesso a window/document.
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const PERIOD_KEYS = ["any", "today", "week", "month"];
 
-export const DEFAULT_CRITERIA = Object.freeze({ term: "", unit: "", category: "", period: "any" });
+export const DEFAULT_CRITERIA = Object.freeze({ term: "", unit: "", category: "", audience: "", period: "any" });
 
 function uuidOrEmpty(value) {
   const text = String(value ?? "").trim();
@@ -41,6 +41,7 @@ export function parseExploreSearch(search, hoje = todayInSaoPaulo()) {
     term: normalizeTerm(params.get("q")),
     unit: uuidOrEmpty(params.get("unit")),
     category: uuidOrEmpty(params.get("category")),
+    audience: uuidOrEmpty(params.get("audience")),
     period,
   };
   const page = parsePage(params.get("page"));
@@ -53,6 +54,7 @@ export function buildExploreSearch(criteria, page = 1, hoje = todayInSaoPaulo())
   if (term) params.set("q", term);
   if (criteria?.unit) params.set("unit", criteria.unit);
   if (criteria?.category) params.set("category", criteria.category);
+  if (criteria?.audience) params.set("audience", criteria.audience);
   const range = periodRange(criteria?.period, hoje);
   for (const name of ["date", "date_from", "date_to"]) {
     if (range[name]) params.set(name, range[name]);
@@ -68,6 +70,7 @@ export function toApiParams(criteria, hoje = todayInSaoPaulo()) {
   if (term) params.q = term;
   if (criteria?.unit) params.unit = criteria.unit;
   if (criteria?.category) params.category = criteria.category;
+  if (criteria?.audience) params.audience = criteria.audience;
   return { ...params, ...periodRange(criteria?.period, hoje) };
 }
 

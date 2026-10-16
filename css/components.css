@@ -377,9 +377,15 @@ textarea:disabled {
 }
 
 .activity-card__unit,
+.activity-card__audience,
 .activity-card__when {
   margin: 0;
   font-size: var(--font-size-small);
+}
+
+.activity-card__audience {
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
 }
 
 /* A data fica na base do card: cards da mesma linha alinham a última linha. */

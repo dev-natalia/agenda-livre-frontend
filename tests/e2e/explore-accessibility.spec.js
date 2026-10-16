@@ -41,7 +41,7 @@ test.describe("estrutura", () => {
   test("rótulos visíveis associados a todos os campos", async ({ page }) => {
     await mockApi(page, { activitiesResponder: listingOf(5) });
     await page.goto("/explorar.html");
-    for (const label of ["Buscar por nome da atividade", "Unidade", "Categoria", "Quando?"]) {
+    for (const label of ["Buscar por nome da atividade", "Unidade", "Categoria", "Público-alvo", "Quando?"]) {
       await expect(page.getByLabel(label)).toBeVisible();
       await expect(page.locator("label", { hasText: label })).toBeVisible();
     }
@@ -180,7 +180,8 @@ test.describe("teclado, movimento e console", () => {
     expect(at("search-q")).toBeGreaterThan(0);
     expect(at("filter-unit")).toBeGreaterThan(at("search-q"));
     expect(at("filter-category")).toBeGreaterThan(at("filter-unit"));
-    expect(at("filter-period")).toBeGreaterThan(at("filter-category"));
+    expect(at("filter-audience")).toBeGreaterThan(at("filter-category"));
+    expect(at("filter-period")).toBeGreaterThan(at("filter-audience"));
     expect(at("explore-submit")).toBeGreaterThan(at("filter-period"));
     expect(at("explore-clear")).toBeGreaterThan(at("explore-submit"));
     expect(names.findIndex((n) => n.startsWith("Atividade de teste"))).toBeGreaterThan(at("explore-clear"));

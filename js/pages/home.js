@@ -20,8 +20,9 @@ export function init() {
   const unitSelect = document.getElementById("filter-unit");
   const categorySelect = document.getElementById("filter-category");
   const optionsStatus = document.getElementById("filter-options-status");
+  const audienceSelect = document.getElementById("filter-audience");
   if (unitSelect && categorySelect && optionsStatus) {
-    initFilterOptions({ unitSelect, categorySelect, statusEl: optionsStatus }).catch(() => {});
+    initFilterOptions({ unitSelect, categorySelect, audienceSelect, statusEl: optionsStatus }).catch(() => {});
   }
 
   const content = document.getElementById("upcoming-content");

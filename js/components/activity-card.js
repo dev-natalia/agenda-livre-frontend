@@ -60,6 +60,12 @@ function unitLabel(unit) {
   return hasText(unit.neighborhood) ? `${unit.name} · ${unit.neighborhood}` : unit.name;
 }
 
+function audienceLabel(audiences) {
+  if (!Array.isArray(audiences)) return null;
+  const names = audiences.filter((item) => hasText(item?.name)).map((item) => item.name.trim());
+  return names.length ? names.join(", ") : null;
+}
+
 function createWhen(occurrence) {
   const formatted = formatOccurrence(occurrence);
   const when = createElement("p", "activity-card__when");
@@ -96,6 +102,9 @@ export function createActivityCard(activity, { headingLevel = 3, categoryIcons =
 
   const unit = unitLabel(activity.unit);
   if (unit) body.append(prependIcon(createElement("p", "activity-card__unit", unit), createLocationIcon));
+
+  const audiences = audienceLabel(activity.target_audiences);
+  if (audiences) body.append(createElement("p", "activity-card__audience", audiences));
 
   body.append(createWhen(activity.next_occurrence));
   card.append(body);

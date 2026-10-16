@@ -9,7 +9,7 @@ import {
 const HOJE = "2026-10-11";
 const UNIT = "11111111-1111-4111-8111-111111111111";
 const CATEGORY = "33333333-3333-4333-8333-333333333333";
-const base = { term: "", unit: "", category: "", period: "any" };
+const base = { term: "", unit: "", category: "", audience: "", period: "any" };
 
 describe("parseExploreSearch", () => {
   it("sem parâmetros: critérios padrão, página 1 e nada alterado", () => {
@@ -22,7 +22,7 @@ describe("parseExploreSearch", () => {
       `?q=dan%C3%A7a&unit=${UNIT}&category=${CATEGORY}&page=3`,
       HOJE,
     );
-    expect(criteria).toEqual({ term: "dança", unit: UNIT, category: CATEGORY, period: "any" });
+    expect(criteria).toEqual({ term: "dança", unit: UNIT, category: CATEGORY, audience: "", period: "any" });
     expect(page).toBe(3);
     expect(changed).toBe(false);
   });
@@ -124,7 +124,7 @@ describe("buildExploreSearch", () => {
   });
 
   it("ida e volta mantém os critérios", () => {
-    const criteria = { term: "teatro", unit: UNIT, category: CATEGORY, period: "month" };
+    const criteria = { term: "teatro", unit: UNIT, category: CATEGORY, audience: "55555555-5555-4555-8555-555555555551", period: "month" };
     const search = buildExploreSearch(criteria, 4, HOJE);
     expect(parseExploreSearch(`?${search}`, HOJE)).toEqual({ criteria, page: 4, changed: false });
   });
@@ -149,5 +149,36 @@ describe("toApiParams", () => {
       date: HOJE,
     });
     expect(toApiParams({ ...base, period: "week" }, HOJE)).toEqual({ date_from: HOJE, date_to: "2026-10-17" });
+  });
+});
+
+describe("audience (feature 012)", () => {
+  const AUDIENCE = "55555555-5555-4555-8555-555555555551";
+
+  it("lê um UUID válido e ignora o malformado, reescrevendo o endereço", () => {
+    expect(parseExploreSearch(`?audience=${AUDIENCE}`, HOJE)).toMatchObject({
+      criteria: { audience: AUDIENCE },
+      changed: false,
+    });
+    expect(parseExploreSearch("?audience=abc", HOJE)).toMatchObject({ criteria: { audience: "" }, changed: true });
+  });
+
+  it("com o parâmetro repetido vale o primeiro", () => {
+    const other = "55555555-5555-4555-8555-555555555552";
+    const { criteria, changed } = parseExploreSearch(`?audience=${AUDIENCE}&audience=${other}`, HOJE);
+    expect(criteria.audience).toBe(AUDIENCE);
+    expect(changed).toBe(true);
+  });
+
+  it("escreve entre category e as datas, só quando escolhido", () => {
+    const criteria = { ...base, unit: UNIT, category: CATEGORY, audience: AUDIENCE, period: "today" };
+    const keys = [...new URLSearchParams(buildExploreSearch(criteria, 2, HOJE)).keys()];
+    expect(keys).toEqual(["unit", "category", "audience", "date", "page"]);
+    expect(buildExploreSearch(base, 1, HOJE)).toBe("");
+  });
+
+  it("toApiParams inclui audience só quando preenchido", () => {
+    expect(toApiParams({ ...base, audience: AUDIENCE }, HOJE)).toEqual({ audience: AUDIENCE });
+    expect(toApiParams(base, HOJE)).toEqual({});
   });
 });

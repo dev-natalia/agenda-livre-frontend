@@ -37,12 +37,13 @@ function present(value) {
 }
 
 // Contrato: specs/005-home-page/contracts/explore-url.md. Padrões e vazios não entram.
-export function buildExploreUrl({ term, unit, category, period } = {}, hoje = todayInSaoPaulo()) {
+export function buildExploreUrl({ term, unit, category, audience, period } = {}, hoje = todayInSaoPaulo()) {
   const params = new URLSearchParams();
   const q = normalizeTerm(term);
   if (q) params.set("q", q);
   if (present(unit)) params.set("unit", present(unit));
   if (present(category)) params.set("category", present(category));
+  if (present(audience)) params.set("audience", present(audience));
   const range = periodRange(period, hoje);
   for (const key of ["date", "date_from", "date_to"]) {
     if (range[key]) params.set(key, range[key]);

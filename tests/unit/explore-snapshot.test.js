@@ -17,6 +17,7 @@ const activity = (n) => ({
   unit: { id: "u", name: "CEU", neighborhood: "Grajaú", slug: "ceu" },
   category: { id: "c", name: "Cultura", slug: "cultura" },
   next_occurrence: { date: "2026-11-20", start_time: "14:00", end_time: "15:00" },
+  target_audiences: [{ id: "a1", name: "Adultos", slug: "adultos" }],
 });
 const data = (n = 3) => ({
   count: 27,
@@ -41,6 +42,7 @@ describe("snapshot da listagem", () => {
       unit: { name: "CEU", neighborhood: "Grajaú" },
       category: { name: "Cultura", slug: "cultura" },
       next_occurrence: { date: "2026-11-20", start_time: "14:00", end_time: "15:00" },
+      target_audiences: [{ id: "a1", name: "Adultos" }],
     });
     expect(snap.scrollY).toBe(0);
     expect(snap.activityId).toBeNull();
@@ -116,5 +118,13 @@ describe("snapshot da listagem", () => {
   it("dados sem results não são guardados", () => {
     saveSnapshot("q=a", { count: 1 }, NOW);
     expect(readSnapshot("q=a", NOW)).toBeNull();
+  });
+});
+
+describe("target_audiences na cópia (feature 012)", () => {
+  it("atividade sem o campo guarda lista vazia", () => {
+    const { target_audiences: _omit, ...legacy } = activity(1);
+    saveSnapshot("q=b", { count: 1, next: null, previous: null, results: [legacy] }, NOW);
+    expect(readSnapshot("q=b", NOW + 1).results[0].target_audiences).toEqual([]);
   });
 });

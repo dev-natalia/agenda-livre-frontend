@@ -191,3 +191,34 @@ describe("cor por categoria e ícones (feature 011)", () => {
   });
 });
 
+
+describe("público-alvo no card (feature 012)", () => {
+  const audience = (card) => card.querySelector(".activity-card__audience");
+
+  it("mostra os nomes na ordem recebida, separados por vírgula", () => {
+    const card = createActivityCard({
+      ...FULL,
+      target_audiences: [
+        { id: "a1", name: "Adolescentes" },
+        { id: "a2", name: "Adultos" },
+      ],
+    });
+    expect(text(audience(card))).toBe("Adolescentes, Adultos");
+  });
+
+  it.each([
+    ["ausente", undefined],
+    ["nulo", null],
+    ["vazio", []],
+    ["sem nomes", [{ id: "x" }, { id: "y", name: "  " }, null]],
+  ])("não cria a linha quando o campo é %s", (_label, value) => {
+    const card = createActivityCard({ ...FULL, target_audiences: value });
+    expect(audience(card)).toBeNull();
+  });
+
+  it("trata HTML no nome como texto literal", () => {
+    const card = createActivityCard({ ...FULL, target_audiences: [{ id: "a", name: "<b>Todos</b>" }] });
+    expect(text(audience(card))).toBe("<b>Todos</b>");
+    expect(audience(card).querySelector("b")).toBeNull();
+  });
+});

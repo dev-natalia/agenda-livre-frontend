@@ -78,7 +78,7 @@ O link para pular ao conteúdo deve direcionar ao conteúdo principal da página
 - Mostrar três atividades publicadas com ocorrências futuras, ordenadas cronologicamente pela próxima ocorrência.
 - Considerar a próxima ocorrência de atividades recorrentes.
 - Não exibir atividades com status `CANCELLED` ou `FINISHED`.
-- Se a API permitir, cada card deve apresentar nome, categoria, unidade, próxima data/horário e imagem.
+- Se a API permitir, cada card deve apresentar nome, categoria, unidade, público-alvo (`target_audiences`, omitido quando vazio), próxima data/horário e imagem.
 - Cards usam grade em desktop e uma coluna em telas estreitas.
 
 ### 6.3 Carregamento
@@ -101,7 +101,8 @@ O link para pular ao conteúdo deve direcionar ao conteúdo principal da página
 ## 7. Página Explorar atividades
 
 ### 7.1 Pesquisa e filtros
-- Disponibilizar pesquisa por texto e filtros de unidade, categoria e período, conforme os recursos efetivamente suportados pela API.
+- Disponibilizar pesquisa por texto e filtros de unidade, categoria, público-alvo e período, conforme os recursos efetivamente suportados pela API.
+- O filtro de público-alvo (opção padrão “Todos os públicos”) é montado a partir de `GET /audiences/`; se a lista não carregar, oferece só a opção padrão e avisa, sem afetar os outros filtros. A regra de “Todas as idades” é aplicada pela API.
 - Os filtros são combináveis e cada campo permite uma única seleção.
 - Usar controles HTML nativos, como `<select>`, com rótulos visíveis associados por `label`.
 - A seleção dos filtros não dispara requisição.

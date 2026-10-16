@@ -102,3 +102,60 @@ describe("initFilterOptions", () => {
     expect(getUnits).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("initFilterOptions com público-alvo (feature 012)", () => {
+  let audience;
+  const AUDIENCES = list([
+    { id: "p1", name: "Adultos" },
+    { id: "p2", name: "Crianças" },
+    { id: "", name: "sem id" },
+    { id: "p3" },
+  ]);
+
+  beforeEach(() => {
+    audience = document.createElement("select");
+    audience.innerHTML = '<option value="">Todos os públicos</option>';
+    document.body.append(audience);
+  });
+
+  const runAudience = (getUnits, getCategories, getAudiences) =>
+    initFilterOptions({
+      unitSelect: dom.unit,
+      categorySelect: dom.category,
+      audienceSelect: audience,
+      statusEl: dom.optionsStatus,
+      getUnits,
+      getCategories,
+      getAudiences,
+    });
+
+  it("preenche só com itens válidos", async () => {
+    await runAudience(async () => UNITS, async () => CATEGORIES, async () => AUDIENCES);
+    expect([...audience.options].map((o) => o.textContent)).toEqual(["Todos os públicos", "Adultos", "Crianças"]);
+    expect(dom.optionsStatus.textContent).toBe("");
+  });
+
+  it.each([
+    [[false, false, true], "Não foi possível carregar os públicos-alvo."],
+    [[true, false, true], "Não foi possível carregar as unidades e os públicos-alvo."],
+    [[false, true, true], "Não foi possível carregar as categorias e os públicos-alvo."],
+    [[true, true, true], "Não foi possível carregar as unidades, as categorias e os públicos-alvo."],
+  ])("mensagem de falha %j", async ([u, c, a], message) => {
+    await runAudience(u ? fail : async () => UNITS, c ? fail : async () => CATEGORIES, a ? fail : async () => AUDIENCES);
+    expect(dom.optionsStatus.textContent).toBe(message);
+    expect(audience.options).toHaveLength(1);
+  });
+
+  it("sem audienceSelect (Início) não consulta públicos", async () => {
+    const getAudiences = vi.fn(async () => AUDIENCES);
+    await initFilterOptions({
+      unitSelect: dom.unit,
+      categorySelect: dom.category,
+      statusEl: dom.optionsStatus,
+      getUnits: async () => UNITS,
+      getCategories: async () => CATEGORIES,
+      getAudiences,
+    });
+    expect(getAudiences).not.toHaveBeenCalled();
+  });
+});

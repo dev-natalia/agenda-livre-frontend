@@ -345,6 +345,20 @@ Como pessoa visitante, quero combinar filtros, para reduzir a listagem às ativi
 - Ao aplicar, os resultados são atualizados dinamicamente com skeleton loading.
 - A nova consulta começa na página 1.
 
+#### FE-045 — Filtrar atividades por público-alvo
+**Prioridade:** P1
+
+Como pessoa visitante, quero escolher um público-alvo na página Explorar e ver o público em cada card, para encontrar atividades adequadas a mim ou à minha família.
+
+**Critérios de aceitação**
+- O seletor é montado a partir de `GET /audiences/`, sem valores fixos; a opção padrão é “Todos os públicos”.
+- A seleção é única e segue o modelo dos demais filtros: só consulta ao acionar “Filtrar”, combina com texto, unidade, categoria e período, volta à página 1 e é refletida na URL (`audience`).
+- Identificador inválido na URL é ignorado; lista de públicos indisponível deixa só a opção padrão, com aviso, sem afetar os demais filtros.
+- “Limpar filtros” também remove o público.
+- O card mostra os públicos de `target_audiences` quando houver e omite a linha quando não houver.
+- A regra de “Todas as idades” (inclusiva) é da API; o frontend não reclassifica resultados.
+- Spec: `specs/012-audience-filter/`. Backend: `agenda-livre-backend/docs/10-filtro-por-publico-alvo.md` (US-045 a US-050).
+
 #### FE-021 — Limpar os filtros
 **Prioridade:** P0
 
@@ -736,3 +750,4 @@ Antes de concluir uma história:
 | Versão | Alteração |
 |---|---|
 | 0.1 | Criação inicial do backlog do frontend, com épicos, features, histórias, prioridades, critérios de aceitação e dependências. |
+| 0.2 | Acrescentada a FE-045 (filtro por público-alvo na Explorar), feature 012. |
