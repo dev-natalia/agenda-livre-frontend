@@ -1,5 +1,5 @@
 // As fixtures vivem em tests/fixtures/activities.js; são reexportadas aqui para os testes de navegador.
-import { makeActivity, UNITS, CATEGORIES } from "../../fixtures/activities.js";
+import { makeActivity, UNITS, CATEGORIES, AUDIENCES } from "../../fixtures/activities.js";
 export * from "../../fixtures/activities.js";
 
 const API = "**/api/v1";
@@ -25,23 +25,25 @@ export async function overrideConfig(page) {
   });
 }
 
-// failActivities / failUnits / failCategories: status HTTP, ou "network" para abortar a conexão.
+// failActivities / failUnits / failCategories / failAudiences: status HTTP, ou "network" para abortar a conexão.
 export async function mockApi(
   page,
   {
     activities = [makeActivity(1), makeActivity(2), makeActivity(3)],
     units = UNITS,
     categories = CATEGORIES,
+    audiences = AUDIENCES,
     delayMs = 0,
     failActivities = null,
     failUnits = null,
     failCategories = null,
+    failAudiences = null,
     activitiesResponder = null,
     detailsResponder = null,
   } = {},
 ) {
   const requests = [];
-  const state = { failActivities, failUnits, failCategories };
+  const state = { failActivities, failUnits, failCategories, failAudiences };
 
   // `activitiesResponder(url)` devolve { status = 200, body, delayMs } e substitui a lista fixa.
   async function handleActivities(route) {
@@ -97,6 +99,7 @@ export async function mockApi(
   );
   await page.route(`${API}/units/**`, (route) => handle(route, "failUnits", units));
   await page.route(`${API}/categories/**`, (route) => handle(route, "failCategories", categories));
+  await page.route(`${API}/audiences/**`, (route) => handle(route, "failAudiences", audiences));
 
   return {
     requests,

@@ -7,7 +7,7 @@ vi.mock("../../js/config.js", () => ({
 }));
 
 import { createRequestScope } from "../../js/api/client.js";
-import { PAGE_SIZE, fetchActivities, fetchActivityDetails, fetchCategories, fetchUnits, fetchUpcomingActivities } from "../../js/api/public.js";
+import { PAGE_SIZE, fetchActivities, fetchActivityDetails, fetchAudiences, fetchCategories, fetchUnits, fetchUpcomingActivities } from "../../js/api/public.js";
 import { todayInSaoPaulo } from "../../js/utils/dates.js";
 import { jsonResponse } from "./helpers/fake-fetch.js";
 
@@ -50,6 +50,7 @@ describe("fetchUpcomingActivities", () => {
 describe.each([
   ["fetchUnits", fetchUnits, "/api/v1/units/"],
   ["fetchCategories", fetchCategories, "/api/v1/categories/"],
+  ["fetchAudiences", fetchAudiences, "/api/v1/audiences/"],
 ])("%s", (_name, fn, path) => {
   it("pede até 50 itens", async () => {
     const fetchImpl = fetchReturning(() => jsonResponse(LIST));
@@ -216,5 +217,18 @@ describe("fetchActivityDetails", () => {
     const assertion = expect(promise).rejects.toMatchObject({ category: "timeout" });
     await vi.advanceTimersByTimeAsync(15001);
     await assertion;
+  });
+});
+
+describe("fetchActivities com público-alvo (feature 012)", () => {
+  it("envia audience só quando escolhido", async () => {
+    const AUDIENCE = "55555555-5555-4555-8555-555555555551";
+    const withIt = fetchReturning(() => jsonResponse(LIST));
+    await fetchActivities({ criteria: { audience: AUDIENCE }, fetchImpl: withIt });
+    expect(new URL(String(withIt.mock.calls[0][0])).searchParams.get("audience")).toBe(AUDIENCE);
+
+    const without = fetchReturning(() => jsonResponse(LIST));
+    await fetchActivities({ criteria: { audience: "" }, fetchImpl: without });
+    expect(new URL(String(without.mock.calls[0][0])).searchParams.has("audience")).toBe(false);
   });
 });

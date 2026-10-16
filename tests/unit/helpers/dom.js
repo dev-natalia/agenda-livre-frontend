@@ -13,6 +13,8 @@ export function mountHomeDom() {
           <select id="filter-unit" name="unit"><option value="">Todas as unidades</option></select>
           <label for="filter-category">Categoria</label>
           <select id="filter-category" name="category"><option value="">Todas as categorias</option></select>
+          <label for="filter-audience">Público-alvo</label>
+          <select id="filter-audience" name="audience"><option value="">Todos os públicos</option></select>
           <label for="filter-period">Quando?</label>
           <select id="filter-period" name="period">
             <option value="any">Qualquer data</option>
@@ -36,6 +38,7 @@ export function mountHomeDom() {
     term: document.getElementById("search-q"),
     unit: document.getElementById("filter-unit"),
     category: document.getElementById("filter-category"),
+    audience: document.getElementById("filter-audience"),
     period: document.getElementById("filter-period"),
     optionsStatus: document.getElementById("filter-options-status"),
     content: document.getElementById("upcoming-content"),
@@ -55,6 +58,8 @@ export function mountExploreDom() {
         <select id="filter-unit" name="unit" aria-describedby="filter-options-status"><option value="">Todas as unidades</option></select>
         <label for="filter-category">Categoria</label>
         <select id="filter-category" name="category" aria-describedby="filter-options-status"><option value="">Todas as categorias</option></select>
+        <label for="filter-audience">Público-alvo</label>
+        <select id="filter-audience" name="audience" aria-describedby="filter-options-status"><option value="">Todos os públicos</option></select>
         <label for="filter-period">Quando?</label>
         <select id="filter-period" name="period">
           <option value="any">Qualquer data</option>
@@ -80,6 +85,7 @@ export function mountExploreDom() {
     term: $("search-q"),
     unit: $("filter-unit"),
     category: $("filter-category"),
+    audience: $("filter-audience"),
     period: $("filter-period"),
     submit: $("explore-submit"),
     clear: $("explore-clear"),

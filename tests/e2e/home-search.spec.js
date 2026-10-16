@@ -181,6 +181,7 @@ test.describe("filtros rápidos", () => {
     await page.keyboard.press("Tab");
     await page.keyboard.press("Tab");
     await page.keyboard.press("Tab");
+    await page.keyboard.press("Tab");
     await expect(submit(page)).toBeFocused();
     await page.keyboard.press("Enter");
     await page.waitForURL(/explorar\.html/);

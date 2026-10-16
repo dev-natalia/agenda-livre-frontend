@@ -103,4 +103,36 @@ describe.skipIf(!API)("contrato com a API real", () => {
     const { status } = await get("/activities/00000000-0000-4000-8000-000000000000/");
     expect(status).toBe(404);
   });
+
+  // Feature 012 (agenda-livre-backend/docs/10-filtro-por-publico-alvo.md).
+  it("catálogo de públicos-alvo: envelope e campos usados pelo filtro", async () => {
+    const { status, body } = await get("/audiences/?page_size=50");
+    expect(status).toBe(200);
+    expectEnvelope(body);
+    for (const item of body.results) {
+      expect(typeof item.id, "público sem id").toBe("string");
+      expect(typeof item.name, "público sem name").toBe("string");
+    }
+  });
+
+  it("filtro audience: UUID malformado é 400 com errors.audience; válido é 200", async (ctx) => {
+    const bad = await get("/activities/?audience=abc");
+    expect(bad.status).toBe(400);
+    expect(bad.body?.errors, "400 sem errors.audience").toHaveProperty("audience");
+
+    const audiences = await get("/audiences/?page_size=50");
+    if (!audiences.body?.results?.length) return ctx.skip();
+    const { id } = audiences.body.results[0];
+    const ok = await get(`/activities/?audience=${id}`);
+    expect(ok.status).toBe(200);
+    expectEnvelope(ok.body);
+  });
+
+  it("itens da listagem trazem target_audiences como lista", async (ctx) => {
+    const { body } = await get("/activities/");
+    if (!body?.results?.length) return ctx.skip();
+    for (const item of body.results) {
+      expect(Array.isArray(item.target_audiences), `lista/${item.id}: target_audiences deve ser lista`).toBe(true);
+    }
+  });
 });
