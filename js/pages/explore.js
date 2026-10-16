@@ -53,6 +53,7 @@ export function init() {
     term: document.getElementById("search-q"),
     unit: document.getElementById("filter-unit"),
     category: document.getElementById("filter-category"),
+    audience: document.getElementById("filter-audience"),
     period: document.getElementById("filter-period"),
     clear: document.getElementById("explore-clear"),
     notice: document.getElementById("filter-options-status"),
@@ -82,6 +83,7 @@ export function init() {
     termInput: els.term,
     unitSelect: els.unit,
     categorySelect: els.category,
+    audienceSelect: els.audience,
     periodSelect: els.period,
     clearButton: els.clear,
     noticeEl: els.notice,
@@ -143,11 +145,12 @@ export function init() {
   form
     .loadOptions()
     .then(({ dropped }) => {
-      if (!dropped.unit && !dropped.category) return;
+      if (!dropped.unit && !dropped.category && !dropped.audience) return;
       const criteria = {
         ...applied.criteria,
         unit: dropped.unit ? "" : applied.criteria.unit,
         category: dropped.category ? "" : applied.criteria.category,
+        audience: dropped.audience ? "" : applied.criteria.audience,
       };
       return go(criteria, applied.page, { replace: true });
     })
