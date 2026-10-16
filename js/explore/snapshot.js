@@ -32,6 +32,9 @@ function pick(activity) {
     unit: activity.unit ? { name: activity.unit.name, neighborhood: activity.unit.neighborhood } : null,
     category: activity.category ? { name: activity.category.name, slug: activity.category.slug } : null,
     next_occurrence: activity.next_occurrence ?? null,
+    target_audiences: Array.isArray(activity.target_audiences)
+      ? activity.target_audiences.filter(Boolean).map(({ id, name }) => ({ id, name }))
+      : [],
   };
 }
 

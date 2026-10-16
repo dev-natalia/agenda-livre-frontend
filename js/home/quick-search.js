@@ -14,6 +14,7 @@ export function initQuickSearch(form, navigate = (url) => location.assign(url)) 
         term: field("q"),
         unit: field("unit"),
         category: field("category"),
+        audience: field("audience"),
         period: field("period"),
       }),
     );

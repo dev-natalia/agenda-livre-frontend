@@ -28,6 +28,10 @@ export function fetchCategories({ scope, fetchImpl } = {}) {
   return get("/categories/", { scope, fetchImpl, params: { page_size: OPTIONS_PAGE_SIZE } });
 }
 
+export function fetchAudiences({ scope, fetchImpl } = {}) {
+  return get("/audiences/", { scope, fetchImpl, params: { page_size: OPTIONS_PAGE_SIZE } });
+}
+
 // Listagem da Explorar: critérios já normalizados (js/explore/url-state.js), page omitido na primeira.
 export function fetchActivities({ criteria, page = 1, scope, fetchImpl } = {}) {
   const params = { ...toApiParams(criteria ?? {}), page_size: PAGE_SIZE };

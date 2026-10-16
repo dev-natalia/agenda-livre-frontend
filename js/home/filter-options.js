@@ -1,4 +1,4 @@
-import { fetchCategories, fetchUnits } from "../api/public.js";
+import { fetchAudiences, fetchCategories, fetchUnits } from "../api/public.js";
 
 function validItems(data) {
   const results = Array.isArray(data?.results) ? data.results : [];
@@ -19,26 +19,43 @@ export function fillSelect(select, items) {
   }
 }
 
+const FAILURE_LABELS = [
+  ["unit", "as unidades"],
+  ["category", "as categorias"],
+  ["audience", "os públicos-alvo"],
+];
+
 function failureMessage(failed) {
-  if (failed.unit && failed.category) return "Não foi possível carregar as unidades e as categorias.";
-  if (failed.unit) return "Não foi possível carregar as unidades.";
-  if (failed.category) return "Não foi possível carregar as categorias.";
-  return "";
+  const names = FAILURE_LABELS.filter(([key]) => failed[key]).map(([, label]) => label);
+  if (names.length === 0) return "";
+  const text = names.length === 1 ? names[0] : `${names.slice(0, -1).join(", ")} e ${names.at(-1)}`;
+  return `Não foi possível carregar ${text}.`;
 }
 
 // Sem bloquear o formulário nem mover o foco; cada filtro falha de forma independente.
 export async function initFilterOptions({
   unitSelect,
   categorySelect,
+  audienceSelect = null,
   statusEl,
   getUnits = fetchUnits,
   getCategories = fetchCategories,
+  getAudiences = fetchAudiences,
 }) {
-  const [units, categories] = await Promise.allSettled([getUnits(), getCategories()]);
-  const failed = { unit: units.status === "rejected", category: categories.status === "rejected" };
+  const [units, categories, audiences] = await Promise.allSettled([
+    getUnits(),
+    getCategories(),
+    audienceSelect ? getAudiences() : Promise.resolve(null),
+  ]);
+  const failed = {
+    unit: units.status === "rejected",
+    category: categories.status === "rejected",
+    audience: audiences.status === "rejected",
+  };
 
   if (!failed.unit) fillSelect(unitSelect, validItems(units.value));
   if (!failed.category) fillSelect(categorySelect, validItems(categories.value));
+  if (audienceSelect && !failed.audience) fillSelect(audienceSelect, validItems(audiences.value));
   statusEl.textContent = failureMessage(failed);
   return failed;
 }
